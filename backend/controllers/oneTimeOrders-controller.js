@@ -1,4 +1,4 @@
-const FoodItem = require("../models/FoodItem");
+const FoodItem = require("../models/items-model");
 
 class FoodItemController {
   // Create a new food item

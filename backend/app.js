@@ -1,14 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const companyRoutes = require("./routes/companyRoutes");
-const menuRoutes = require("./routes/menuRoutes");
-const paymentRoutes = require("./routes/paymentRoutes");
+const userRoutes = require("./routes/user-routes");
+const oneTimeOrdersRoutes = require("./routes/one-time-orders-routes");
+// const companyRoutes = require("./routes/company-routes");
+// const menuRoutes = require("./routes/menu-routes");
+// const paymentRoutes = require("./routes/payment-routes");
 const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
 // parse application/json
 var bodyParser = require("body-parser");
@@ -32,14 +34,12 @@ app.use((req, res, next) => {
   next();
 });
 
-const oneTimeOrdersRoutes = require("./routes/one-time-orders-routes");
-
-app.use("/api/items", oneTimeOrdersRoutes);
-
 //routes here.
-app.use("/api/companies", companyRoutes);
-app.use("/api/menu", menuRoutes);
-app.use("/api/payment", paymentRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/items", oneTimeOrdersRoutes);
+// app.use("/api/companies", companyRoutes);
+// app.use("/api/menu", menuRoutes);
+// app.use("/api/payment", paymentRoutes);
 app.use((req, res, next) => {
   throw new HttpError("Could not find this route.", 404);
 });

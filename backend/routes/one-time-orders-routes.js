@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const FoodItemController = require("../controllers/one-time-orders  ");
+const FoodItemController = require("../controllers/oneTimeOrders-controller");
 
 // Create a new food item
 router.post("/", FoodItemController.create);
