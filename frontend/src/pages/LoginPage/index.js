@@ -18,7 +18,7 @@ const LoginPage = () => {
       const { role, company } = data.user;
 
       if (role.toLowerCase() === "superuser") {
-        navigate("/");
+        navigate("/su");
       } else if (role.toLowerCase() === "admin") {
         navigate(`/admin/${company}`);
       } else {

@@ -2,14 +2,14 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const UserSchema = new mongoose.Schema({
+  name: { type: String },
+  phonenumber: { type: String, required: true },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ["superuser", "company"], required: true },
+  role: { type: String, enum: ["superuser", "admin"], required: true },
+  isActive: { type: Boolean, default: true },
   company: {
     type: String,
-    required: function () {
-      return this.role === "company";
-    },
   },
 });
 

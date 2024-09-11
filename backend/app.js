@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const userRoutes = require("./routes/user-routes");
 const oneTimeOrdersRoutes = require("./routes/one-time-orders-routes");
-// const companyRoutes = require("./routes/company-routes");
+const companyRoutes = require("./routes/company-routes");
 // const menuRoutes = require("./routes/menu-routes");
 // const paymentRoutes = require("./routes/payment-routes");
 const cors = require("cors");
@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 //routes here.
 app.use("/api/users", userRoutes);
 app.use("/api/items", oneTimeOrdersRoutes);
-// app.use("/api/companies", companyRoutes);
+app.use("/api/companies", companyRoutes);
 // app.use("/api/menu", menuRoutes);
 // app.use("/api/payment", paymentRoutes);
 app.use((req, res, next) => {

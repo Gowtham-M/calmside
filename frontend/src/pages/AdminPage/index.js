@@ -1,3 +1,6 @@
+// admin should be able to
+// edit menu
+// check for analytics of the sales
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, Button } from "antd";

@@ -53,8 +53,15 @@ exports.addSuperUser = async (req, res) => {
 // Add company admin
 exports.addCompanyAdmin = async (req, res) => {
   try {
-    const { username, password, company } = req.body;
-    const user = new User({ username, password, role: "company", company });
+    const { name, username, password, company, phonenumber } = req.body;
+    const user = new User({
+      name,
+      username,
+      password,
+      role: "admin",
+      company,
+      phonenumber,
+    });
     await user.save();
     res.status(201).json(user);
   } catch (err) {
@@ -117,4 +124,24 @@ exports.isCompanyAdmin = (req, res, next) => {
     return res.status(403).json({ message: "Forbidden" });
   }
   next();
+};
+
+exports.getAdmins = async (req, res, next) => {
+  try {
+    const admins = await User.find({ role: "admin" });
+    res.json(admins);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+};
+
+exports.updateAdmins = async (req, res, next) => {
+  try {
+    const admin = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    res.json(admin);
+  } catch (err) {
+    res.status(500).send(err);
+  }
 };
