@@ -1,0 +1,17 @@
+.dashboard-page {
+    padding: 20px;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+  }
+  
+  .ant-card {
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .ant-card:hover {
+    background-color: #f0f0f0;
+  }
+  
