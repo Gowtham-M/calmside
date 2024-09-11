@@ -1,11 +1,13 @@
-const fs = require("fs");
 const express = require("express");
 const mongoose = require("mongoose");
+const companyRoutes = require("./routes/companyRoutes");
+const menuRoutes = require("./routes/menuRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
-
+app.use(express.json());
 app.use(cors());
 
 // parse application/json
@@ -34,15 +36,22 @@ const oneTimeOrdersRoutes = require("./routes/one-time-orders-routes");
 
 app.use("/api/items", oneTimeOrdersRoutes);
 
-//write routes here.
+//routes here.
+app.use("/api/companies", companyRoutes);
+app.use("/api/menu", menuRoutes);
+app.use("/api/payment", paymentRoutes);
+app.use((req, res, next) => {
+  throw new HttpError("Could not find this route.", 404);
+});
+
 mongoose
   .connect(process.env.DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(process.env.PORT || 3030, () => {
-      console.log("app started");
+    app.listen(process.env.PORT || 5000, () => {
+      console.log("express is running!");
     });
   })
   .catch((err) => {
