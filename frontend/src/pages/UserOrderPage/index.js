@@ -1,18 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Tabs, Table, InputNumber, Button, Input, Collapse } from 'antd';
-import axios from 'axios';
-import './UserOrderPage.css';
+import React, { useState, useEffect } from "react";
+import { Tabs, Input, Button, Table } from "antd";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import "./UserOrderPage.css";
 
 const { TabPane } = Tabs;
-const { Panel } = Collapse;
 
 const UserOrderPage = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [phoneNumber, setPhoneNumber] = useState('');
-
-  const company = window.location.pathname.split('/')[1]; // Extract company from URL path
+  const { company } = useParams();
 
   useEffect(() => {
     axios.get(`/api/menu/${company}`).then((response) => {
@@ -20,118 +17,58 @@ const UserOrderPage = () => {
     });
   }, [company]);
 
-  const addToOrder = (item, qty) => {
+  const handleAddItem = (item, quantity) => {
     const updatedItems = [...selectedItems];
-    const index = updatedItems.findIndex((i) => i._id === item._id);
-    if (index >= 0) {
-      updatedItems[index].quantity += qty;
+    const existingItem = updatedItems.find((i) => i._id === item._id);
+    if (existingItem) {
+      existingItem.quantity = quantity;
     } else {
-      updatedItems.push({ ...item, quantity: qty });
+      updatedItems.push({ ...item, quantity });
     }
     setSelectedItems(updatedItems);
-    calculateTotalPrice(updatedItems);
   };
 
-  const calculateTotalPrice = (items) => {
-    const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    setTotalPrice(total);
-  };
-
-  const handlePlaceOrder = () => {
-    if (!phoneNumber) {
-      alert('Phone number is required!');
-      return;
-    }
-    axios.post('/api/order', {
-      items: selectedItems,
-      phoneNumber,
-      totalPrice
-    }).then((response) => {
-      window.location.href = response.data.paymentUrl;
-    });
-  };
-
-  const renderMenuTable = () => {
-    if (Array.isArray(menuItems)) {
-      const columns = [
-        { title: 'Item Name', dataIndex: 'name', key: 'name' },
-        { title: 'Price', dataIndex: 'price', key: 'price' },
-        {
-          title: 'Quantity',
-          key: 'quantity',
-          render: (_, record) => (
-            <InputNumber
-              min={0}
-              defaultValue={0}
-              onChange={(value) => addToOrder(record, value)}
-            />
-          ),
-        },
-      ];
-      return <Table dataSource={menuItems} columns={columns} rowKey="_id" />;
-    } else {
-      return Object.keys(menuItems).map((category) => (
-        <Collapse key={category} defaultActiveKey={category}>
-          <Panel header={category} key={category}>
-            <Table
-              dataSource={Object.keys(menuItems[category]).map(item => ({
-                name: item,
-                price: menuItems[category][item],
-                _id: item
-              }))}
-              columns={[
-                { title: 'Item Name', dataIndex: 'name', key: 'name' },
-                { title: 'Price', dataIndex: 'price', key: 'price' },
-                {
-                  title: 'Quantity',
-                  key: 'quantity',
-                  render: (_, record) => (
-                    <InputNumber
-                      min={0}
-                      defaultValue={0}
-                      onChange={(value) => addToOrder(record, value)}
-                    />
-                  ),
-                },
-              ]}
-              rowKey="_id"
-            />
-          </Panel>
-        </Collapse>
-      ));
-    }
+  const handlePayment = () => {
+    axios
+      .post("/api/payment", {
+        items: selectedItems,
+        company,
+        total: selectedItems.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        ),
+        phone: "",
+      })
+      .then((response) => {
+        window.location.href = response.data.paymentUrl;
+      });
   };
 
   return (
-    <div className="user-order-page">
+    <div>
       <Tabs defaultActiveKey="1">
-        <TabPane tab="One-time Orders" key="1">
-          {renderMenuTable()}
-
-          <h3>Order Summary</h3>
-          {selectedItems.map((item) => (
-            <p key={item._id}>
-              {item.name} x {item.quantity} = {item.price * item.quantity}
-            </p>
-          ))}
-
-          <h4>Total: {totalPrice}</h4>
-
-          <Input
-            placeholder="Enter phone number"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            required
+        <TabPane tab="One Time Order" key="1">
+          <Table
+            dataSource={menuItems}
+            columns={[
+              { title: "Item", dataIndex: "name" },
+              { title: "Price", dataIndex: "price" },
+              {
+                title: "Quantity",
+                render: (text, record) => (
+                  <Input
+                    onChange={(e) => handleAddItem(record, e.target.value)}
+                  />
+                ),
+              },
+            ]}
           />
-
-          <Button type="primary" onClick={handlePlaceOrder} disabled={!phoneNumber}>
+          <Button type="primary" onClick={handlePayment}>
             Place Order
           </Button>
         </TabPane>
-
         <TabPane tab="Subscriptions" key="2">
-          <h3>Subscription Plans</h3>
-          {/* Add subscription UI here */}
+          <p>Subscription options here</p>
         </TabPane>
       </Tabs>
     </div>
