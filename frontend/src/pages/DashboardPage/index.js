@@ -11,7 +11,7 @@ const DashboardPage = () => {
   // Fetch the list of companies when the component mounts
   useEffect(() => {
     axios
-      .get("/api/companies")
+      .get(`${process.env.REACT_APP_BACKEND_API_URL}/api/companies`)
       .then((response) => {
         setCompanies(response.data);
       })
@@ -20,7 +20,7 @@ const DashboardPage = () => {
 
   // Handle the click on a company card
   const handleCompanyClick = (company) => {
-    navigate(`/${company.name}`);
+    navigate(`/${company._id}`);
   };
 
   return (
@@ -34,13 +34,16 @@ const DashboardPage = () => {
               hoverable
               cover={
                 <img
-                  alt={company.name}
+                  alt={company.companyName}
                   src={company.logo || "default-logo.jpg"}
                 />
               }
               onClick={() => handleCompanyClick(company)}
             >
-              <Card.Meta title={company.name} description={company.address} />
+              <Card.Meta
+                title={company.companyName}
+                description={company.address}
+              />
             </Card>
           </Col>
         ))}
