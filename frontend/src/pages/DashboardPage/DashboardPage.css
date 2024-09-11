@@ -14,4 +14,38 @@
   .ant-card:hover {
     background-color: #f0f0f0;
   }
+
+  .dashboard-container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .dashboard-row {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .company-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  .company-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .ant-card-cover img {
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+  }
+  
+  .ant-card-meta-title {
+    font-weight: bold;
+  }
+  
+  .ant-card-meta-description {
+    color: #888;
+  }
+  
   

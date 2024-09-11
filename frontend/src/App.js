@@ -1,8 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import AdminPage from "./pages/AdminPage/index";
+import DashboardPage from "./pages/DashboardPage/index";
 import UserOrderPage from "./pages/UserOrderPage/index";
-import DashboardPage from "./pages/DashboardPage";
+import AdminPage from "./pages/AdminPage/index";
+import LoginPage from "./pages/LoginPage";
 
 const App = () => {
   return (
@@ -11,6 +12,7 @@ const App = () => {
         <Route path="/" element={<DashboardPage />} />
         <Route path="/:company" element={<UserOrderPage />} />
         <Route path="/admin/:company" element={<AdminPage />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </Router>
   );

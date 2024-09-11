@@ -1,68 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Form,  message } from 'antd';
-import axios from 'axios';
-import { Line } from 'react-chartjs-2';
-import './AdminPage.css';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Table, Button } from "antd";
+import { Line } from "react-chartjs-2";
+import "./AdminPage.css";
 
 const AdminPage = () => {
   const [menuItems, setMenuItems] = useState([]);
-  const [analyticsData, setAnalyticsData] = useState({});
-  const [form] = Form.useForm();
-
-  const company = window.location.pathname.split('/')[2]; // Extract company from URL path
+  const [salesData, setSalesData] = useState({});
 
   useEffect(() => {
-    axios.get(`/api/admin/menu/${company}`).then((response) => {
-      setMenuItems(response.data);
-    });
-    axios.get(`/api/admin/analytics/${company}`).then((response) => {
-      setAnalyticsData(response.data);
-    });
-  }, [company]);
-
-  const handleEditMenu = (values) => {
-    axios.post(`/api/admin/menu/${company}`, values).then(() => {
-      message.success('Menu updated successfully');
-    });
-  };
+    axios
+      .get("/api/admin/menu")
+      .then((response) => setMenuItems(response.data));
+    axios
+      .get("/api/admin/analytics")
+      .then((response) => setSalesData(response.data));
+  }, []);
 
   const columns = [
-    { title: 'Item Name', dataIndex: 'name', key: 'name' },
-    { title: 'Price', dataIndex: 'price', key: 'price' },
+    { title: "Item", dataIndex: "name" },
+    { title: "Price", dataIndex: "price" },
+    { title: "Actions", render: (text, record) => <Button>Edit</Button> },
   ];
 
+  const data = {
+    labels: salesData.labels,
+    datasets: [{ label: "Sales", data: salesData.values }],
+  };
+
   return (
-    <div className="admin-page">
-      <h2>Edit Menu Items</h2>
-      <Form form={form} onFinish={handleEditMenu} layout="vertical">
-        <Table dataSource={menuItems} columns={columns} rowKey="_id" />
-
-        <Form.Item label="Item Name" name="name">
-          <Input />
-        </Form.Item>
-        <Form.Item label="Price" name="price">
-          <Input />
-        </Form.Item>
-
-        <Button type="primary" htmlType="submit">
-          Save
-        </Button>
-      </Form>
-
+    <div>
+      <h2>Menu Management</h2>
+      <Table dataSource={menuItems} columns={columns} />
       <h2>Sales Analytics</h2>
-      <Line
-        data={{
-          labels: analyticsData.days,
-          datasets: [
-            {
-              label: 'Items Sold',
-              data: analyticsData.itemsSold,
-              borderColor: 'rgba(75,192,192,1)',
-              fill: false,
-            },
-          ],
-        }}
-      />
+      <Line data={data} />
     </div>
   );
 };
