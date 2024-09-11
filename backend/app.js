@@ -30,14 +30,15 @@ app.use((req, res, next) => {
   next();
 });
 
-//write routes here.
+const oneTimeOrdersRoutes = require("./routes/one-time-orders-routes");
 
+app.use("/api/items", oneTimeOrdersRoutes);
+
+//write routes here.
 mongoose
   .connect(process.env.DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
   })
   .then(() => {
     app.listen(process.env.PORT || 3030, () => {
