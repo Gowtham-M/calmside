@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+body {
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  text-align: center;
+}
+
+.ant-card {
+  cursor: pointer;
+}

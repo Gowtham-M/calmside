@@ -1,8 +1,12 @@
-import axios from 'axios';
+import axios from "axios";
 
-// Set base URL for API requests
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: "http://localhost:5000/api",
 });
+
+export const getCompanies = () => api.get("/companies");
+export const getMenu = (company) => api.get(`/menu/${company}`);
+export const postPayment = (data) => api.post("/payment", data);
+export const postLogin = (data) => api.post("/login", data);
 
 export default api;
