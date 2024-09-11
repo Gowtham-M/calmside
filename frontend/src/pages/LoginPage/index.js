@@ -10,12 +10,16 @@ const LoginPage = () => {
   const handleLogin = async (values) => {
     setLoading(true);
     try {
-      const { data } = await axios.post("/api/login", values);
-      const { role, company } = data;
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_BACKEND_API_URL}/api/users/login`,
+        values
+      );
 
-      if (role === "SuperUser") {
+      const { role, company } = data.user;
+
+      if (role.toLowerCase() === "superuser") {
         navigate("/");
-      } else if (role === "CompanyAdmin") {
+      } else if (role.toLowerCase() === "admin") {
         navigate(`/admin/${company}`);
       } else {
         message.error("Invalid credentials");
