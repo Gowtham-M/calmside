@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Input, Space, message } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const AdminPage = () => {
@@ -13,6 +13,7 @@ const AdminPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const { company } = useParams();
 
   const navigate = useNavigate();
 
@@ -23,9 +24,7 @@ const AdminPage = () => {
   const fetchMenus = async () => {
     try {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_BACKEND_API_URL}/api/menu/admin/${
-          window.location.pathname.split("/")[2]
-        }`
+        `${process.env.REACT_APP_BACKEND_API_URL}/api/menu/admin/${company}`
       );
 
       setMenus(data);
@@ -73,7 +72,6 @@ const AdminPage = () => {
 
   const handleModalSubmit = async (values) => {
     setLoading(true);
-    const company = window.location.pathname.split("/")[2];
     try {
       if (editingMenu) {
         await axios.put(

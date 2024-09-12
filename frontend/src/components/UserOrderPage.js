@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Tabs, Table, InputNumber, Button, Input } from 'antd';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { Tabs, Table, InputNumber, Button, Input } from "antd";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const { TabPane } = Tabs;
 
@@ -8,9 +9,9 @@ const UserOrderPage = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState("");
 
-  const company = window.location.pathname.split('/')[2]; // Extract company from URL path
+  const { company } = useParams();
 
   useEffect(() => {
     // Fetch menu items from backend based on company
@@ -32,31 +33,36 @@ const UserOrderPage = () => {
   };
 
   const calculateTotalPrice = (items) => {
-    const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const total = items.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0
+    );
     setTotalPrice(total);
   };
 
   const handlePlaceOrder = () => {
     if (!phoneNumber) {
-      alert('Phone number is required!');
+      alert("Phone number is required!");
       return;
     }
     // Redirect to payment gateway (Razorpay) and save the order in DB after payment success
-    axios.post('/api/order', {
-      items: selectedItems,
-      phoneNumber,
-      totalPrice
-    }).then((response) => {
-      window.location.href = response.data.paymentUrl;
-    });
+    axios
+      .post("/api/order", {
+        items: selectedItems,
+        phoneNumber,
+        totalPrice,
+      })
+      .then((response) => {
+        window.location.href = response.data.paymentUrl;
+      });
   };
 
   const columns = [
-    { title: 'Item Name', dataIndex: 'name', key: 'name' },
-    { title: 'Price', dataIndex: 'price', key: 'price' },
+    { title: "Item Name", dataIndex: "name", key: "name" },
+    { title: "Price", dataIndex: "price", key: "price" },
     {
-      title: 'Quantity',
-      key: 'quantity',
+      title: "Quantity",
+      key: "quantity",
       render: (_, record) => (
         <InputNumber
           min={0}
@@ -89,7 +95,11 @@ const UserOrderPage = () => {
             required
           />
 
-          <Button type="primary" onClick={handlePlaceOrder} disabled={!phoneNumber}>
+          <Button
+            type="primary"
+            onClick={handlePlaceOrder}
+            disabled={!phoneNumber}
+          >
             Place Order
           </Button>
         </TabPane>
@@ -105,14 +115,12 @@ const UserOrderPage = () => {
 
 export default UserOrderPage;
 
-
 // import React, { useState } from 'react';
 // import { CheckCircleOutlined,CheckSquareOutlined } from '@ant-design/icons';
 // import { Button, Row, Col } from 'antd';
 
-
 // const MenuPage = () => {
-    
+
 //   return (
 //     <div>
 //         <>

@@ -65,8 +65,6 @@ const AdminManagement = () => {
   };
 
   const handleModalSubmit = async (values) => {
-    const company = window.location.pathname.split("/")[2];
-
     setLoading(true);
     try {
       if (editingAdmin) {
