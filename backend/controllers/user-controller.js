@@ -128,7 +128,7 @@ exports.isCompanyAdmin = (req, res, next) => {
 
 exports.getAdmins = async (req, res, next) => {
   try {
-    const admins = await User.find({ role: "admin" });
+    const admins = await User.find({ role: "admin", company: req.params.id });
     res.json(admins);
   } catch (err) {
     res.status(500).send(err);

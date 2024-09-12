@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Input, Space, message } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const AdminManagement = () => {
   const [admins, setAdmins] = useState([]);
@@ -9,6 +10,7 @@ const AdminManagement = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const { company } = useParams();
 
   useEffect(() => {
     fetchAdmins();
@@ -17,7 +19,7 @@ const AdminManagement = () => {
   const fetchAdmins = async () => {
     try {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_BACKEND_API_URL}/api/companies/admins`
+        `${process.env.REACT_APP_BACKEND_API_URL}/api/companies/admins/${company}`
       );
       setAdmins(data);
     } catch (error) {

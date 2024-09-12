@@ -10,7 +10,7 @@ router.put(
   companyController.uploadLogo,
   companyController.updateCompany
 ); // Handles logo update
-router.get("/admins", userController.getAdmins);
+router.get("/admins/:id", userController.getAdmins);
 router.post("/admins", userController.addCompanyAdmin);
 router.put("/admins/:id", userController.updateAdmins);
 
