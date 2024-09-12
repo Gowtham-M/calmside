@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Input, Space, message } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 
 const AdminPage = () => {
@@ -15,10 +15,9 @@ const AdminPage = () => {
   const [form] = Form.useForm();
   const { company } = useParams();
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     fetchMenus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchMenus = async () => {

@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Button, Table, Space, Collapse, Typography } from "antd";
+import {
+  Tabs,
+  Button,
+  Table,
+  Space,
+  Collapse,
+  Typography,
+  Input,
+  message,
+} from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -12,6 +21,8 @@ const { Text } = Typography;
 const UserOrderPage = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [phoneNumber, setPhone] = useState("");
+  const [isPhoneValid, setIsPhoneValid] = useState(false);
   const { company } = useParams();
 
   useEffect(() => {
@@ -39,12 +50,26 @@ const UserOrderPage = () => {
     setSelectedItems(updatedItems);
   };
 
+  const handlePhoneChange = (e) => {
+    const inputPhone = e.target.value;
+    setPhone(inputPhone);
+
+    // Simple phone number validation
+    const phoneRegex = /^[6-9]\d{9}$/; // Indian phone number format: starts with 6-9 and is 10 digits long
+    setIsPhoneValid(phoneRegex.test(inputPhone));
+  };
+
   const handlePayment = () => {
+    if (!isPhoneValid) {
+      message.error("Please enter a valid phone number.");
+      return;
+    }
+
     axios
       .post(`${process.env.REACT_APP_BACKEND_API_URL}/api/payment/create-order`, {
         items: selectedItems,
         company,amount:calculateTotal(),
-        phone: "",
+        phoneNumber,
       })
       .then((response) => {
         window.location.href = response.data.paymentUrl;
@@ -153,10 +178,25 @@ const UserOrderPage = () => {
               <h3>Order Summary</h3>
               {renderOrderSummary()}
               <Text strong>Total Price: {calculateTotal()}</Text>
+              <div style={{ marginTop: "16px" }}>
+                <Input
+                  placeholder="Enter Phone Number"
+                  value={phoneNumber}
+                  onChange={handlePhoneChange}
+                  maxLength={10}
+                  style={{ width: "200px" }}
+                />
+                {!isPhoneValid && phoneNumber && (
+                  <Text type="danger" style={{ marginLeft: "8px" }}>
+                    Invalid phone number
+                  </Text>
+                )}
+              </div>
               <Button
                 type="primary"
                 onClick={handlePayment}
                 style={{ margin: "25px 0 0 25px" }}
+                disabled={selectedItems.length === 0 || !isPhoneValid}
               >
                 Place Order
               </Button>
