@@ -64,17 +64,53 @@ const UserOrderPage = () => {
       message.error("Please enter a valid phone number.");
       return;
     }
-
+  
     axios
       .post(`${process.env.REACT_APP_BACKEND_API_URL}/api/payment/create-order`, {
         items: selectedItems,
-        company,amount:calculateTotal(),
+        company,
+        amount: calculateTotal(),
         phoneNumber,
       })
       .then((response) => {
-        window.location.href = response.data.paymentUrl;
+        if (response.data.success) {
+          console.log(response.data)
+          const { order, key } = response.data;
+  
+          const options = {
+            key: key, // Your Razorpay Key
+            amount: order.amount, // Amount in paise
+            currency: order.currency,
+            name: "Your Company Name",
+            description: "Test Transaction",
+            order_id: order.id,
+            handler: function (response) {
+              // Handle success here
+              console.log("Payment Success:", response);
+              // You may want to send the payment details to your server
+            },
+            prefill: {
+              name: "", // User's name
+              email: "", // User's email
+              contact: phoneNumber, // User's phone number
+            },
+            theme: {
+              color: "#F37254",
+            },
+          };
+  
+          const paymentObject = new window.Razorpay(options);
+          paymentObject.open();
+        } else {
+          message.error("Failed to create order.");
+        }
+      })
+      .catch((error) => {
+        console.error("Payment error:", error);
+        message.error("An error occurred while processing the payment.");
       });
   };
+  
 
   // Group items by category
   const groupedItems = menuItems.reduce((acc, item) => {
@@ -94,7 +130,7 @@ const UserOrderPage = () => {
       align: "left",
       render: (text, record, index) => index + 1,
     },
-    { title: "Item", dataIndex: "itemName" },
+    { title: "Item", dataIndex: "itemName", align:"left" },
     { title: "Price", dataIndex: "price", align: "right" },
     {
       title: "Quantity",
