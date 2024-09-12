@@ -4,7 +4,7 @@ const path = require("path");
 const userRoutes = require("./routes/user-routes");
 const oneTimeOrdersRoutes = require("./routes/one-time-orders-routes");
 const companyRoutes = require("./routes/company-routes");
-// const menuRoutes = require("./routes/menu-routes");
+const menuRoutes = require("./routes/menu-routes");
 // const paymentRoutes = require("./routes/payment-routes");
 const cors = require("cors");
 require("dotenv").config();
@@ -41,7 +41,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/users", userRoutes);
 app.use("/api/items", oneTimeOrdersRoutes);
 app.use("/api/companies", companyRoutes);
-// app.use("/api/menu", menuRoutes);
+app.use("/api/menu", menuRoutes);
 // app.use("/api/payment", paymentRoutes);
 app.use((req, res, next) => {
   throw new HttpError("Could not find this route.", 404);

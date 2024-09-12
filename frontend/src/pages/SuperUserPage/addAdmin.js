@@ -70,7 +70,7 @@ const AdminManagement = () => {
       if (editingAdmin) {
         await axios.put(
           `${process.env.REACT_APP_BACKEND_API_URL}/api/companies/admins/${editingAdmin._id}`,
-          values
+          { ...values, company }
         );
         message.success("Admin updated successfully");
       } else {

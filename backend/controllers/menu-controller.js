@@ -2,7 +2,7 @@ const MenuItem = require("../models/menuItem-model");
 
 exports.getMenuItems = async (req, res) => {
   try {
-    const items = await MenuItem.find({ company: req.params.company });
+    const items = await MenuItem.find({ company: req.params.id });
     res.json(items);
   } catch (err) {
     res.status(500).send(err);

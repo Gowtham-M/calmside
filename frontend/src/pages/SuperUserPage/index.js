@@ -206,7 +206,6 @@ const CompanyManagement = () => {
 
   const handleViewCompanyDetails = (record) => {
     navigate(`/company/${record._id}`);
-    message.info("View Company Details functionality not yet implemented.");
   };
 
   return (
