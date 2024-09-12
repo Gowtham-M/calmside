@@ -7,8 +7,7 @@ router.post("/admin", menuController.addMenuItem);
 router.put("/admin/:id", menuController.updateMenuItem);
 
 //user menu routes
-// router.get("/", menuController.getAdmins);
-// router.post("/", menuController.addCompanyAdmin);
-// router.put("/:id", menuController.updateAdmins);
+router.get("/:id", menuController.getUserMenuItems);
+// router.post("/:id", menuController.addCompanyAdmin);
 
 module.exports = router;

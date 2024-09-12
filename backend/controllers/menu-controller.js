@@ -29,3 +29,12 @@ exports.updateMenuItem = async (req, res) => {
     res.status(500).send(err);
   }
 };
+
+exports.getUserMenuItems = async (req, res) => {
+  try {
+    const items = await MenuItem.find({ company: req.params.id });
+    res.json(items);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+};
