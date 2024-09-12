@@ -208,13 +208,7 @@ const AdminPage = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            name="category"
-            label="Category"
-            rules={[
-              { required: true, message: "Please enter the category name" },
-            ]}
-          >
+          <Form.Item name="category" label="Category">
             <Input />
           </Form.Item>
           <Form.Item
