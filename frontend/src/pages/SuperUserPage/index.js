@@ -22,7 +22,7 @@ const CompanyManagement = () => {
   const [editingCompany, setEditingCompany] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [fileList, setFileList] = useState([]); // File state for logo
+  const [logoFile, setLogoFile] = useState(null); // State to store the uploaded file
   const [form] = Form.useForm();
 
   const navigate = useNavigate();
@@ -44,14 +44,12 @@ const CompanyManagement = () => {
 
   const handleAddCompany = () => {
     setEditingCompany(null);
-    setFileList([]);
     setIsModalVisible(true);
   };
 
   const handleEditCompany = (record) => {
     setEditingCompany(record);
     form.setFieldsValue(record);
-    setFileList([]); // Clear the file list when editing
     setIsModalVisible(true);
   };
 
@@ -84,44 +82,44 @@ const CompanyManagement = () => {
   const handleModalSubmit = async (values) => {
     setLoading(true);
     try {
-      // Handle file upload if there's a file
-      let logoUrl = editingCompany?.logo; // If editing, retain previous logo
+      const formData = new FormData();
+      formData.append("companyName", values.companyName);
+      formData.append("branchName", values.branchName);
+      formData.append("address", values.address);
+      formData.append("upiId", values.upiId);
 
-      if (fileList.length > 0) {
-        const formData = new FormData();
-        formData.append("file", fileList[0]);
-
-        const uploadRes = await axios.post(
-          `${process.env.REACT_APP_BACKEND_API_URL}/api/upload`,
-          formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
-        logoUrl = uploadRes.data.url; // Get the URL or ID of the uploaded image
+      // Append logo file if present
+      if (logoFile) {
+        formData.append("logo", logoFile);
       }
-
-      const companyData = {
-        ...values,
-        logo: logoUrl, // Include the logo URL in the company data
-      };
 
       if (editingCompany) {
         await axios.put(
           `${process.env.REACT_APP_BACKEND_API_URL}/api/companies/${editingCompany._id}`,
-          companyData
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
         );
         message.success("Company updated successfully");
       } else {
         await axios.post(
           `${process.env.REACT_APP_BACKEND_API_URL}/api/companies`,
-          companyData
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
         );
         message.success("Company added successfully");
       }
       fetchCompanies();
       setIsModalVisible(false);
       form.resetFields();
+      setLogoFile(null); // Reset logo file
     } catch (error) {
       message.error("Failed to save company details");
     } finally {
@@ -129,8 +127,9 @@ const CompanyManagement = () => {
     }
   };
 
-  const handleFileChange = ({ fileList }) => {
-    setFileList(fileList.slice(-1)); // Limit to 1 file
+  const handleLogoUpload = (file) => {
+    setLogoFile(file); // Store the selected file in the state
+    return false; // Prevent auto-upload
   };
 
   const columns = [
@@ -169,8 +168,13 @@ const CompanyManagement = () => {
       title: "Logo",
       dataIndex: "logo",
       key: "logo",
-      render: (logo) =>
-        logo ? <img src={logo} alt="logo" style={{ width: 50 }} /> : "No logo",
+      render: (text) => (
+        <img
+          src={`${process.env.REACT_APP_BACKEND_API_URL}${text}`}
+          alt="Company Logo"
+          style={{ width: 100, height: 100, objectFit: "cover" }}
+        />
+      ),
     },
     {
       title: "Actions",
@@ -273,13 +277,12 @@ const CompanyManagement = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item name="logo" label="Logo">
+          <Form.Item label="Logo" valuePropName="file">
             <Upload
-              beforeUpload={() => false} // Disable auto upload, handle it manually
-              fileList={fileList}
-              onChange={handleFileChange}
-              maxCount={1}
+              beforeUpload={handleLogoUpload}
               accept="image/*"
+              maxCount={1}
+              listType="picture"
             >
               <Button icon={<UploadOutlined />}>Upload Logo</Button>
             </Upload>

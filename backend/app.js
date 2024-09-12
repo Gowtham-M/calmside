@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const path = require("path");
 const userRoutes = require("./routes/user-routes");
 const oneTimeOrdersRoutes = require("./routes/one-time-orders-routes");
 const companyRoutes = require("./routes/company-routes");
@@ -34,6 +35,8 @@ app.use((req, res, next) => {
   next();
 });
 
+// Serve static files from 'uploads' directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 //routes here.
 app.use("/api/users", userRoutes);
 app.use("/api/items", oneTimeOrdersRoutes);

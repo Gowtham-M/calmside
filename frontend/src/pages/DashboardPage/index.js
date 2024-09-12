@@ -34,8 +34,16 @@ const DashboardPage = () => {
               hoverable
               cover={
                 <img
-                  alt={company.companyName}
-                  src={company.logo || "default-logo.jpg"}
+                  src={`${process.env.REACT_APP_BACKEND_API_URL}${company.logo}`}
+                  alt="Company Logo"
+                  style={{
+                    width: 100,
+                    height: 100,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    objectFit: "cover",
+                  }}
                 />
               }
               onClick={() => handleCompanyClick(company)}
