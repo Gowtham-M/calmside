@@ -3,10 +3,10 @@ const mongoose = require("mongoose");
 const MenuItemSchema = new mongoose.Schema(
   {
     company: { type: String, required: true },
-    category: { type: String },
+    category: { type: String, default: "others" },
     itemName: { type: String, required: true },
     price: { type: Number, required: true },
-    isActive:{type:Boolean,default:true}
+    isActive: { type: Boolean, default: true },
   },
   { timestamps: true }
 );
