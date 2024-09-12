@@ -47,7 +47,7 @@ const AdminPage = () => {
   const handleDeleteMenu = async (menuId) => {
     try {
       await axios.put(
-        `${process.env.REACT_APP_BACKEND_API_URL}/api/menu/${menuId}`,
+        `${process.env.REACT_APP_BACKEND_API_URL}/api/menu/admin/${menuId}`,
         { isActive: false }
       );
       message.success("Menu deactivated");
@@ -60,7 +60,7 @@ const AdminPage = () => {
   const handleActivateMenu = async (menuId) => {
     try {
       await axios.put(
-        `${process.env.REACT_APP_BACKEND_API_URL}/api/menu/${menuId}`,
+        `${process.env.REACT_APP_BACKEND_API_URL}/api/menu/admin/${menuId}`,
         { isActive: true }
       );
       message.success("Menu activated");
@@ -75,7 +75,7 @@ const AdminPage = () => {
     try {
       if (editingMenu) {
         await axios.put(
-          `${process.env.REACT_APP_BACKEND_API_URL}/api/menu/${editingMenu._id}`,
+          `${process.env.REACT_APP_BACKEND_API_URL}/api/menu/admin/${editingMenu._id}`,
           { ...values, company }, // Send as JSON
           {
             headers: {
@@ -117,11 +117,6 @@ const AdminPage = () => {
       title: "Item Name",
       dataIndex: "itemName",
       key: "itemName",
-      render: (text, record) => (
-        <Button type="link" onClick={() => handleViewMenuDetails(record)}>
-          {text}
-        </Button>
-      ),
     },
     {
       title: "Category",
@@ -160,10 +155,6 @@ const AdminPage = () => {
       ),
     },
   ];
-
-  const handleViewMenuDetails = (record) => {
-    navigate(`/menu/${record._id}`);
-  };
 
   return (
     <div style={{ padding: "20px" }}>
