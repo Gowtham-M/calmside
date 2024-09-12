@@ -4,8 +4,12 @@ const companyController = require("../controllers/company-controller");
 const userController = require("../controllers/user-controller");
 
 router.get("/", companyController.getCompanies);
-router.post("/", companyController.addCompany);
-router.put("/:id", companyController.updateCompany); //add update function
+router.post("/", companyController.uploadLogo, companyController.addCompany); // Handles logo upload
+router.put(
+  "/:id",
+  companyController.uploadLogo,
+  companyController.updateCompany
+); // Handles logo update
 router.get("/admins", userController.getAdmins);
 router.post("/admins", userController.addCompanyAdmin);
 router.put("/admins/:id", userController.updateAdmins);

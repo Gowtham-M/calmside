@@ -7,6 +7,7 @@ const CompanySchema = new mongoose.Schema(
     address: { type: String, required: true },
     upiId: { type: String, required: true },
     isActive: { type: Boolean, default: true },
+    logo: { type: String }, // Store the logo as a URL or file path
   },
   { timestamps: true }
 );
