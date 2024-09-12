@@ -3,11 +3,12 @@ import { Table } from "antd";
 
 const OrderSummary = ({ selectedItems, totalAmount }) => {
   const columns = [
-    { title: "Item", dataIndex: "name" },
-    { title: "Quantity", dataIndex: "quantity" },
-    { title: "Price", dataIndex: "price" },
+    { title: "Item", dataIndex: "name", align: "left" },
+    { title: "Quantity", dataIndex: "quantity", align: "left" },
+    { title: "Price", dataIndex: "price", align: "left" },
     {
       title: "Total",
+      align: "left",
       render: (text, record) => record.quantity * record.price,
     },
   ];

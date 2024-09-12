@@ -111,22 +111,26 @@ const AdminPage = () => {
       title: "#",
       dataIndex: "key",
       key: "key",
+      align: "left",
       render: (text, record, index) => index + 1,
     },
     {
       title: "Item Name",
       dataIndex: "itemName",
       key: "itemName",
+      align: "left",
     },
     {
       title: "Category",
       dataIndex: "category",
       key: "category",
+      align: "left",
     },
     {
       title: "Price",
       dataIndex: "price",
       key: "price",
+      align: "left",
     },
     {
       title: "Actions",

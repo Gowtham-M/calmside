@@ -95,22 +95,26 @@ const AdminManagement = () => {
       title: "#",
       dataIndex: "key",
       key: "key",
+      align: "left",
       render: (text, record, index) => index + 1,
     },
     {
       title: "Admin Name",
       dataIndex: "name",
       key: "name",
+      align: "left",
     },
     {
       title: "Phone Number",
       dataIndex: "phonenumber",
       key: "phoneNumber",
+      align: "left",
     },
     {
       title: "User Name",
       dataIndex: "username",
       key: "username",
+      align: "left",
     },
     {
       title: "Actions",

@@ -137,12 +137,14 @@ const CompanyManagement = () => {
       title: "#",
       dataIndex: "key",
       key: "key",
+      align: "left",
       render: (text, record, index) => index + 1,
     },
     {
       title: "Company Name",
       dataIndex: "companyName",
       key: "companyName",
+      align: "left",
       render: (text, record) => (
         <Button type="link" onClick={() => handleViewCompanyDetails(record)}>
           {text}
@@ -153,21 +155,25 @@ const CompanyManagement = () => {
       title: "Branch Name",
       dataIndex: "branchName",
       key: "branchName",
+      align: "left",
     },
     {
       title: "Address",
       dataIndex: "address",
       key: "address",
+      align: "left",
     },
     {
       title: "UPI ID",
       dataIndex: "upiId",
       key: "upiId",
+      align: "left",
     },
     {
       title: "Logo",
       dataIndex: "logo",
       key: "logo",
+      align: "left",
       render: (text) => (
         <img
           src={`${process.env.REACT_APP_BACKEND_API_URL}${text}`}

@@ -58,8 +58,8 @@ const UserOrderPage = () => {
   };
 
   const columns = [
-    { title: "Item Name", dataIndex: "name", key: "name" },
-    { title: "Price", dataIndex: "price", key: "price" },
+    { title: "Item Name", dataIndex: "name", key: "name", align: "left" },
+    { title: "Price", dataIndex: "price", key: "price", align: "left" },
     {
       title: "Quantity",
       key: "quantity",
