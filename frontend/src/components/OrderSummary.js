@@ -3,6 +3,13 @@ import { Table } from "antd";
 
 const OrderSummary = ({ selectedItems, totalAmount }) => {
   const columns = [
+    {
+      title: "#",
+      dataIndex: "key",
+      key: "key",
+      align: "left",
+      render: (text, record, index) => index + 1,
+    },
     { title: "Item", dataIndex: "name", align: "left" },
     { title: "Quantity", dataIndex: "quantity", align: "left" },
     { title: "Price", dataIndex: "price", align: "left" },
