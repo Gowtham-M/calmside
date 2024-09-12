@@ -39,7 +39,7 @@ const AdminManagement = () => {
   const handleDeleteAdmin = async (adminId) => {
     try {
       await axios.put(
-        `${process.env.REACT_APP_BACKEND_API_URL}/api/admins/${adminId}`,
+        `${process.env.REACT_APP_BACKEND_API_URL}/api/companies/admins/${adminId}`,
         { isActive: false }
       );
       message.success("Admin deactivated");
@@ -52,7 +52,7 @@ const AdminManagement = () => {
   const handleActivateAdmin = async (adminId) => {
     try {
       await axios.put(
-        `${process.env.REACT_APP_BACKEND_API_URL}/api/admins/${adminId}`,
+        `${process.env.REACT_APP_BACKEND_API_URL}/api/companies/admins/${adminId}`,
         { isActive: true }
       );
       message.success("admin activated");
