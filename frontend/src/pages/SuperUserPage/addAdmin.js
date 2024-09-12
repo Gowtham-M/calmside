@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Input, Space, message } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const AdminManagement = () => {
@@ -10,8 +9,6 @@ const AdminManagement = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchAdmins();
@@ -104,11 +101,6 @@ const AdminManagement = () => {
       title: "Admin Name",
       dataIndex: "name",
       key: "name",
-      render: (text, record) => (
-        <Button type="link" onClick={() => handleViewAdminDetails(record)}>
-          {text}
-        </Button>
-      ),
     },
     {
       title: "Phone Number",
@@ -147,13 +139,6 @@ const AdminManagement = () => {
       ),
     },
   ];
-
-  const handleViewAdminDetails = (record) => {
-    // Navigate to Admin details page (not implemented here)
-    // Example:
-    navigate(`/admin/${record._id}`);
-    message.info("View Admin Details functionality not yet implemented.");
-  };
 
   return (
     <div style={{ padding: "20px" }}>

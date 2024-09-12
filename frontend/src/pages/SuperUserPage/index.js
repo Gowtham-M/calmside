@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Input, Space, message } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Space,
+  message,
+  Upload,
+} from "antd";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -9,6 +22,7 @@ const CompanyManagement = () => {
   const [editingCompany, setEditingCompany] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [fileList, setFileList] = useState([]); // File state for logo
   const [form] = Form.useForm();
 
   const navigate = useNavigate();
@@ -30,12 +44,14 @@ const CompanyManagement = () => {
 
   const handleAddCompany = () => {
     setEditingCompany(null);
+    setFileList([]);
     setIsModalVisible(true);
   };
 
   const handleEditCompany = (record) => {
     setEditingCompany(record);
     form.setFieldsValue(record);
+    setFileList([]); // Clear the file list when editing
     setIsModalVisible(true);
   };
 
@@ -68,16 +84,38 @@ const CompanyManagement = () => {
   const handleModalSubmit = async (values) => {
     setLoading(true);
     try {
+      // Handle file upload if there's a file
+      let logoUrl = editingCompany?.logo; // If editing, retain previous logo
+
+      if (fileList.length > 0) {
+        const formData = new FormData();
+        formData.append("file", fileList[0]);
+
+        const uploadRes = await axios.post(
+          `${process.env.REACT_APP_BACKEND_API_URL}/api/upload`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+        logoUrl = uploadRes.data.url; // Get the URL or ID of the uploaded image
+      }
+
+      const companyData = {
+        ...values,
+        logo: logoUrl, // Include the logo URL in the company data
+      };
+
       if (editingCompany) {
         await axios.put(
           `${process.env.REACT_APP_BACKEND_API_URL}/api/companies/${editingCompany._id}`,
-          values
+          companyData
         );
         message.success("Company updated successfully");
       } else {
         await axios.post(
           `${process.env.REACT_APP_BACKEND_API_URL}/api/companies`,
-          values
+          companyData
         );
         message.success("Company added successfully");
       }
@@ -89,6 +127,10 @@ const CompanyManagement = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleFileChange = ({ fileList }) => {
+    setFileList(fileList.slice(-1)); // Limit to 1 file
   };
 
   const columns = [
@@ -124,6 +166,13 @@ const CompanyManagement = () => {
       key: "upiId",
     },
     {
+      title: "Logo",
+      dataIndex: "logo",
+      key: "logo",
+      render: (logo) =>
+        logo ? <img src={logo} alt="logo" style={{ width: 50 }} /> : "No logo",
+    },
+    {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
@@ -152,8 +201,6 @@ const CompanyManagement = () => {
   ];
 
   const handleViewCompanyDetails = (record) => {
-    // Navigate to company details page (not implemented here)
-    // Example:
     navigate(`/company/${record._id}`);
     message.info("View Company Details functionality not yet implemented.");
   };
@@ -225,6 +272,17 @@ const CompanyManagement = () => {
             rules={[{ required: true, message: "Please enter the UPI ID" }]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item name="logo" label="Logo">
+            <Upload
+              beforeUpload={() => false} // Disable auto upload, handle it manually
+              fileList={fileList}
+              onChange={handleFileChange}
+              maxCount={1}
+              accept="image/*"
+            >
+              <Button icon={<UploadOutlined />}>Upload Logo</Button>
+            </Upload>
           </Form.Item>
           <Form.Item>
             <Space style={{ width: "100%", justifyContent: "end" }}>
