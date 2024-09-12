@@ -41,13 +41,9 @@ const UserOrderPage = () => {
 
   const handlePayment = () => {
     axios
-      .post("/api/payment", {
+      .post(`${process.env.REACT_APP_BACKEND_API_URL}/api/payment/create-order`, {
         items: selectedItems,
-        company,
-        total: selectedItems.reduce(
-          (sum, item) => sum + item.price * item.quantity,
-          0
-        ),
+        company,amount:calculateTotal(),
         phone: "",
       })
       .then((response) => {
