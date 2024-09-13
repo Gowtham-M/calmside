@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout, Menu } from "antd";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import {
   AppstoreOutlined,
   BarChartOutlined,
@@ -11,12 +11,21 @@ const { Sider } = Layout;
 
 const AdminSideNav = () => {
   const { company } = useParams();
+  const location = useLocation();
+
+  // Determine the selected key based on the current path
+  const getSelectedKey = () => {
+    if (location.pathname.includes("/menu-management")) return "1";
+    if (location.pathname.includes("/sales-analytics")) return "2";
+    if (location.pathname.includes("/digital-ledger")) return "3";
+    return "1"; // Default key
+  };
 
   return (
     <Sider width={200} className="site-layout-background">
       <Menu
         mode="inline"
-        defaultSelectedKeys={["1"]}
+        selectedKeys={[getSelectedKey()]} // Dynamically set the active tab
         style={{ height: "100%", borderRight: 0 }}
       >
         <Menu.Item key="1" icon={<AppstoreOutlined />}>
