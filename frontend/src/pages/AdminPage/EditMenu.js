@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Input, Space, message } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Space,
+  message,
+  Upload,
+} from "antd";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -10,6 +23,7 @@ const EditMenu = () => {
   const [isModalVisible, setIsModalVisible] = useState(false); // Modal visibility state
   const [loading, setLoading] = useState(false); // Loading state for submit
   const [form] = Form.useForm();
+  const [imageUrl, setImageUrl] = useState("");
   const { company } = useParams(); // Fetch company ID from URL params
 
   useEffect(() => {
@@ -32,6 +46,7 @@ const EditMenu = () => {
   // Handle adding a new menu item
   const handleAddMenu = () => {
     setEditingMenu(null); // Reset editing menu to null for a new entry
+    setImageUrl("");
     setIsModalVisible(true); // Show modal
   };
 
@@ -39,6 +54,7 @@ const EditMenu = () => {
   const handleEditMenu = (record) => {
     setEditingMenu(record); // Set the record for editing
     form.setFieldsValue(record); // Populate form with record values
+    setImageUrl(record.imageUrl || "");
     setIsModalVisible(true); // Show modal
   };
 
@@ -78,14 +94,14 @@ const EditMenu = () => {
         // If editing, update the menu item
         await axios.put(
           `${process.env.REACT_APP_BACKEND_API_URL}/api/menu/admin/${editingMenu._id}`,
-          { ...values, company }
+          { ...values, imageUrl, company }
         );
         message.success("Menu updated successfully");
       } else {
         // If adding, create a new menu item
         await axios.post(
           `${process.env.REACT_APP_BACKEND_API_URL}/api/menu/admin`,
-          { ...values, company }
+          { ...values, imageUrl, company }
         );
         message.success("Menu added successfully");
       }
@@ -96,6 +112,29 @@ const EditMenu = () => {
       message.error("Failed to save Menu details");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Handle file upload
+  const handleUpload = async ({ file, onSuccess, onError }) => {
+    const formData = new FormData();
+    formData.append("images", file); // Field name should match the backend
+
+    try {
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_BACKEND_API_URL}/api/menu/upload`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      onSuccess(data); // Notify the Upload component
+      setImageUrl((prev) => [...prev, ...data.imageUrls]); // Update image URLs in the state
+      message.success("Images uploaded successfully");
+    } catch (error) {
+      console.error("File upload failed:", error);
+      onError(error); // Notify the Upload component
+      message.error("Failed to upload images");
     }
   };
 
@@ -125,6 +164,18 @@ const EditMenu = () => {
       dataIndex: "price",
       key: "price",
       align: "left",
+    },
+    {
+      title: "Image",
+      key: "image",
+      render: (text, record) =>
+        record.imageUrl ? (
+          <img
+            src={`${process.env.REACT_APP_BACKEND_API_URL}${record?.imageUrl[0]}`}
+            alt="menu"
+            style={{ width: 100 }}
+          />
+        ) : null,
     },
     {
       title: "Actions",
@@ -206,6 +257,17 @@ const EditMenu = () => {
             rules={[{ required: true, message: "Please enter the price" }]}
           >
             <Input />
+          </Form.Item>
+
+          <Form.Item name="images" label="Images">
+            <Upload
+              customRequest={handleUpload}
+              showUploadList={false}
+              accept="image/*"
+              multiple // Enable multiple file selection
+            >
+              <Button icon={<UploadOutlined />}>Upload Images</Button>
+            </Upload>
           </Form.Item>
 
           <Form.Item>

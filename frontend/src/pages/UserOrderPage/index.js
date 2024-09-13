@@ -186,7 +186,7 @@ const UserOrderPage = () => {
       key: "image",
       render: (text, record) => (
         <img
-          src={text}
+          src={`${process.env.REACT_APP_BACKEND_API_URL}${record?.imageUrl[0]}`}
           alt={record.name}
           style={{ width: 50, height: 50, cursor: "pointer" }}
           onClick={() => handleItemClick(record)}
@@ -302,10 +302,10 @@ const UserOrderPage = () => {
           <div className="modal-container">
             <div className="modal-left">
               <Carousel autoplay>
-                {selectedImage?.images?.map((img, index) => (
+                {selectedImage?.imageUrl?.map((img, index) => (
                   <img
                     key={index}
-                    src={img}
+                    src={`${process.env.REACT_APP_BACKEND_API_URL}${img}`}
                     alt={selectedImage.itemName}
                     style={{ maxWidth: "100%", height: "400px" }}
                   />
