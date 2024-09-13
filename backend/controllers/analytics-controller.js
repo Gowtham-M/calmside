@@ -5,7 +5,7 @@ const fs = require("fs");
 exports.generateAnalytics = (req, res) => {
   const companyId = req.params.company; // Get companyId from URL parameter
 
-  // Adjust the paths to your CSV and output files
+  // Define paths
   const inputFilePath = path.join(
     __dirname,
     `../data/${companyId}_order_data.csv`
@@ -20,15 +20,17 @@ exports.generateAnalytics = (req, res) => {
     fs.mkdirSync(path.dirname(outputFilePath), { recursive: true });
   }
 
-  exec(
-    `python3 path/to/your/analytics/analyze.py ${inputFilePath} ${outputFilePath}`,
-    (error) => {
-      if (error) {
-        return res.status(500).json({ message: "Error generating analytics" });
-      }
+  // Define the command to run the Python script
+  const pythonScriptPath = path.join(__dirname, `../../analytics/analyze.py`);
+  const command = `python3 ${pythonScriptPath} ${inputFilePath} ${outputFilePath}`;
 
-      // Return the path to the generated image
-      res.json({ imageUrl: `/analytics/${companyId}_sales_analysis.png` });
+  // Execute the Python script
+  exec(command, (error) => {
+    if (error) {
+      return res.status(500).json({ message: "Error generating analytics" });
     }
-  );
+
+    // Return the path to the generated image
+    res.json({ imageUrl: `/analytics/${companyId}_sales_analysis.png` });
+  });
 };

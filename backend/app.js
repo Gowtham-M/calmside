@@ -40,6 +40,9 @@ app.use((req, res, next) => {
 
 // Serve static files from 'uploads' directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Serve static files from 'public/analytics' directory
+app.use("/analytics", express.static(path.join(__dirname, "public/analytics")));
+
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/items", oneTimeOrdersRoutes);
