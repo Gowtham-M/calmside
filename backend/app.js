@@ -7,6 +7,8 @@ const companyRoutes = require("./routes/company-routes");
 const menuRoutes = require("./routes/menu-routes");
 const paymentRoutes = require("./routes/payment-routes");
 const ledgerRoutes = require("./routes/ledger-routes");
+const analyticsRoutes = require("./routes/analytics-routes");
+
 const cors = require("cors");
 require("dotenv").config();
 
@@ -38,12 +40,13 @@ app.use((req, res, next) => {
 
 // Serve static files from 'uploads' directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-//routes here.
+// Routes
 app.use("/api/users", userRoutes);
 app.use("/api/items", oneTimeOrdersRoutes);
 app.use("/api/companies", companyRoutes);
 app.use("/api/menu", menuRoutes);
 app.use("/api/ledger", ledgerRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/payment", paymentRoutes);

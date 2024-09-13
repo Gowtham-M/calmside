@@ -10,7 +10,7 @@ const SalesAnalyticsPage = () => {
   useEffect(() => {
     fetchAnalytics();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [company]); // Added company as a dependency
 
   const fetchAnalytics = async () => {
     try {
