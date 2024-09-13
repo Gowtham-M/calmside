@@ -96,6 +96,12 @@ exports.login = async (req, res) => {
   }
 };
 
+//Logout controller
+exports.logout = (req, res) => {
+  res.clearCookie("token");
+  res.json({ message: "Logout successful" });
+};
+
 // Middleware to authenticate and authorize based on role
 exports.isAuthenticated = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];

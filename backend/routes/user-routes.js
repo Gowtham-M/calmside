@@ -16,4 +16,7 @@ router.post(
 // Login for both superusers and company admins
 router.post("/login", userController.login);
 
+//Logout for superusers and companu admins
+router.post("/logout", userController.logout);
+
 module.exports = router;
