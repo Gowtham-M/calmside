@@ -1,80 +1,149 @@
-import React, { useState } from "react";
-import { Button, DatePicker, Form, Input, message } from "antd";
+import React, { useState, useEffect } from "react";
+import { Button, DatePicker, Form, Input, Table, message } from "antd";
 import axios from "axios";
 import moment from "moment";
 import { useParams } from "react-router-dom";
 
+const { RangePicker } = DatePicker;
+
 const DigitalLedgerPage = () => {
-  const [ledgerLoading, setLedgerLoading] = useState(false);
+  const [ledgerData, setLedgerData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [filters, setFilters] = useState({});
   const { company } = useParams();
 
-  const handleDownloadLedger = async (filters) => {
-    setLedgerLoading(true);
+  useEffect(() => {
+    fetchLedgerData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters]);
+
+  const fetchLedgerData = async () => {
+    setLoading(true);
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_BACKEND_API_URL}/api/ledger/download`,
-        {
-          ...filters,
-          company,
-        },
-        {
-          responseType: "blob", // Important for file download
-        }
+      const queryParams = new URLSearchParams({
+        companyId: company,
+        phoneNumber: filters.phoneNumber || "",
+        startDate: filters.startDate || "",
+        endDate: filters.endDate || "",
+      }).toString();
+
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_BACKEND_API_URL}/api/ledger?${queryParams}`
       );
-      // Create a download link for the file
-      const url = window.URL.createObjectURL(new Blob([data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute(
-        "download",
-        `ledger_${filters.startDate}_${filters.endDate}.xlsx`
-      );
-      document.body.appendChild(link);
-      link.click();
-      message.success("Ledger downloaded successfully");
+      setLedgerData(data);
     } catch (error) {
-      message.error("Failed to download ledger");
+      message.error("Failed to fetch ledger data");
     } finally {
-      setLedgerLoading(false);
+      setLoading(false);
     }
   };
 
-  const handleLedgerDownload = (values) => {
-    const filters = {
-      startDate: moment(values.startDate).format("YYYY-MM-DD"),
-      endDate: moment(values.endDate).format("YYYY-MM-DD"),
+  const handleFilterSubmit = (values) => {
+    const [startDate, endDate] = values.dateRange || [];
+    const newFilters = {
+      startDate: startDate ? moment(startDate).format("YYYY-MM-DD") : null,
+      endDate: endDate ? moment(endDate).format("YYYY-MM-DD") : null,
       phoneNumber: values.phoneNumber || null,
     };
-    handleDownloadLedger(filters);
+    setFilters(newFilters);
   };
+
+  const handleLedgerDownload = async (format) => {
+    try {
+      const queryParams = new URLSearchParams({
+        companyId: company,
+        phoneNumber: filters.phoneNumber || "",
+        startDate: filters.startDate || "",
+        endDate: filters.endDate || "",
+        format: format, // excel or pdf
+      }).toString();
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_API_URL}/api/ledger/download?${queryParams}`,
+        {
+          responseType: "blob", // important for handling binary data
+        }
+      );
+
+      const blob = new Blob([response.data], {
+        type:
+          format === "excel"
+            ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            : "application/pdf",
+      });
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = `ledger.${format === "excel" ? "xlsx" : "pdf"}`;
+      link.click();
+    } catch (error) {
+      message.error("Failed to download ledger");
+    }
+  };
+
+  const columns = [
+    {
+      title: "Order ID",
+      dataIndex: "orderId",
+      key: "orderId",
+    },
+    {
+      title: "Customer Phone",
+      dataIndex: "userPhoneNumber",
+      key: "userPhoneNumber",
+    },
+    {
+      title: "Order Date",
+      dataIndex: "orderDate",
+      key: "orderDate",
+    },
+    {
+      title: "Total Amount",
+      dataIndex: "totalAmount",
+      key: "totalAmount",
+    },
+  ];
 
   return (
     <div>
-      <h3>Download Digital Ledger</h3>
-      <Form onFinish={handleLedgerDownload} layout="vertical">
-        <Form.Item
-          name="startDate"
-          label="Start Date"
-          rules={[{ required: true, message: "Please select a start date" }]}
-        >
-          <DatePicker />
-        </Form.Item>
-        <Form.Item
-          name="endDate"
-          label="End Date"
-          rules={[{ required: true, message: "Please select an end date" }]}
-        >
-          <DatePicker />
+      <h3>Digital Ledger</h3>
+      <Form
+        onFinish={handleFilterSubmit}
+        layout="vertical"
+        style={{ marginBottom: 20 }}
+      >
+        <Form.Item name="dateRange" label="Date Range">
+          <RangePicker />
         </Form.Item>
         <Form.Item name="phoneNumber" label="Phone Number">
-          <Input placeholder="Optional filter by phone number" />
+          <Input placeholder="Filter by phone number" />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={ledgerLoading}>
-            Download
+          <Button type="primary" htmlType="submit" loading={loading}>
+            Apply Filters
           </Button>
         </Form.Item>
       </Form>
+
+      <div style={{ marginBottom: 20 }}>
+        <Button
+          onClick={() => handleLedgerDownload("pdf")}
+          type="primary"
+          style={{ marginRight: 10 }}
+        >
+          Download PDF
+        </Button>
+        <Button onClick={() => handleLedgerDownload("excel")} type="primary">
+          Download Excel
+        </Button>
+      </div>
+
+      <Table
+        columns={columns}
+        dataSource={ledgerData}
+        rowKey="_id"
+        loading={loading}
+        pagination={{ pageSize: 10 }}
+      />
     </div>
   );
 };
