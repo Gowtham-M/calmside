@@ -4,20 +4,18 @@ const jwt = require("jsonwebtoken");
 // Middleware for authentication and role-based authorization
 exports.authMiddleware = (roles = []) => {
   return (req, res, next) => {
-    // Check if roles is an array, if not, convert it into one
     if (typeof roles === "string") {
       roles = [roles];
     }
 
-    // Get the token from the Authorization header
-    const token = req.headers.authorization?.split(" ")[1];
+    // Get the token from cookies
+    const token = req.cookies.token;
 
     if (!token) {
       return res
         .status(401)
         .json({ message: "Authentication token is missing" });
     }
-
     // Verify the token
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
@@ -89,14 +87,20 @@ exports.login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
-    res.json({ token, user });
+
+    // Set token in a cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+    res.json({ user });
   } catch (err) {
     console.log(`error ${err.message}`);
     res.status(500).json({ message: err.message });
   }
 };
 
-//Logout controller
+// Logout controller
 exports.logout = (req, res) => {
   res.clearCookie("token");
   res.json({ message: "Logout successful" });
@@ -104,7 +108,7 @@ exports.logout = (req, res) => {
 
 // Middleware to authenticate and authorize based on role
 exports.isAuthenticated = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
+  const token = req.cookies.token;
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -126,13 +130,13 @@ exports.isSuperUser = (req, res, next) => {
 };
 
 exports.isCompanyAdmin = (req, res, next) => {
-  if (req.user.role !== "company") {
+  if (req.user.role !== "admin") {
     return res.status(403).json({ message: "Forbidden" });
   }
   next();
 };
 
-exports.getAdmins = async (req, res, next) => {
+exports.getAdmins = async (req, res) => {
   try {
     const admins = await User.find({ role: "admin", company: req.params.id });
     res.json(admins);
@@ -141,7 +145,7 @@ exports.getAdmins = async (req, res, next) => {
   }
 };
 
-exports.updateAdmins = async (req, res, next) => {
+exports.updateAdmins = async (req, res) => {
   try {
     const admin = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,

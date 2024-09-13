@@ -1,5 +1,4 @@
 const express = require("express");
-const authMiddleware = require("../middleware/auth-middleware");
 const router = express.Router();
 const userController = require("../controllers/user-controller");
 
@@ -16,7 +15,7 @@ router.post(
 // Login for both superusers and company admins
 router.post("/login", userController.login);
 
-//Logout for superusers and companu admins
+// Logout for superusers and company admins
 router.post("/logout", userController.logout);
 
 module.exports = router;
