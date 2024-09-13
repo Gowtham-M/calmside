@@ -49,12 +49,15 @@ const UserOrderPage = () => {
         const index = updatedItems.indexOf(existingItem);
         updatedItems.splice(index, 1);
       }
+      message.error(`${item.itemName} removed from cart`);
     } else {
       if (delta > 0) {
         updatedItems.push({ ...item, quantity: delta });
+        message.success(`${item.itemName} added to cart`);
       }
     }
     setSelectedItems(updatedItems);
+    setSelectedImage(null);
   };
 
   const handlePhoneChange = (e) => {
@@ -200,7 +203,7 @@ const UserOrderPage = () => {
   };
 
   const renderOrderSummary = () => {
-    return selectedItems.map((item) => (
+    return selectedItems?.map((item) => (
       <div key={item._id} style={{ marginBottom: "8px" }}>
         <Text>
           {item.itemName} × {item.quantity} × {item.price} ={" "}
@@ -242,7 +245,7 @@ const UserOrderPage = () => {
       <Tabs defaultActiveKey="1">
         <TabPane tab="One Time Order" key="1">
           <Collapse defaultActiveKey={Object.keys(groupedItems)}>
-            {Object.keys(groupedItems).map((category) => (
+            {Object.keys(groupedItems)?.map((category) => (
               <Panel header={category} key={category}>
                 <Table
                   dataSource={groupedItems[category]}
@@ -299,7 +302,7 @@ const UserOrderPage = () => {
           <div className="modal-container">
             <div className="modal-left">
               <Carousel autoplay>
-                {selectedImage.images.map((img, index) => (
+                {selectedImage?.images?.map((img, index) => (
                   <img
                     key={index}
                     src={img}
