@@ -2,30 +2,32 @@ import React, { useState, useEffect } from "react";
 import {
   Tabs,
   Button,
-  Table,
   Space,
-  Collapse,
+  Modal,
+  Carousel,
   Typography,
   Input,
   message,
-  Modal,
-  Carousel,
 } from "antd";
-import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  MinusOutlined,
+  CaretLeftOutlined,
+  CaretRightOutlined,
+} from "@ant-design/icons";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import "./UserOrderPage.css";
 
-const { TabPane } = Tabs;
-const { Panel } = Collapse;
 const { Text } = Typography;
 
 const UserOrderPage = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null);
   const [phoneNumber, setPhone] = useState("");
   const [isPhoneValid, setIsPhoneValid] = useState(false);
+  const [selectedCategoryItems, setSelectedCategoryItems] = useState([]);
+  const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
   const { company } = useParams();
 
   useEffect(() => {
@@ -36,28 +38,25 @@ const UserOrderPage = () => {
       });
   }, [company]);
 
-  const handleItemClick = (item) => {
-    setSelectedImage(item);
-  };
-
   const handleQuantityChange = (item, delta) => {
     const updatedItems = [...selectedItems];
     const existingItem = updatedItems.find((i) => i._id === item._id);
     if (existingItem) {
       existingItem.quantity = Math.max(0, existingItem.quantity + delta);
+      if (delta < 0 && existingItem.quantity !== 0)
+        message.error(`${item.itemName} removed from cart`);
       if (existingItem.quantity === 0) {
         const index = updatedItems.indexOf(existingItem);
         updatedItems.splice(index, 1);
       }
-      message.error(`${item.itemName} removed from cart`);
     } else {
       if (delta > 0) {
         updatedItems.push({ ...item, quantity: delta });
         message.success(`${item.itemName} added to cart`);
       }
     }
+
     setSelectedItems(updatedItems);
-    setSelectedImage(null);
   };
 
   const handlePhoneChange = (e) => {
@@ -130,70 +129,10 @@ const UserOrderPage = () => {
     return acc;
   }, {});
 
-  const columns = [
-    {
-      title: "#",
-      dataIndex: "key",
-      key: "key",
-      align: "left",
-      render: (text, record, index) => index + 1,
-    },
-    { title: "Item", dataIndex: "itemName", align: "left" },
-    { title: "Price", dataIndex: "price", align: "right" },
-    {
-      title: "Quantity",
-      render: (text, record) => (
-        <Space>
-          <Button
-            icon={<MinusOutlined />}
-            onClick={() => handleQuantityChange(record, -1)}
-            disabled={
-              selectedItems.find((i) => i._id === record._id)?.quantity <= 0
-            }
-            style={{
-              borderRadius: "50%",
-              width: "30px",
-              height: "30px",
-              padding: 0,
-            }}
-          />
-          <span
-            style={{
-              display: "inline-block",
-              width: "40px",
-              textAlign: "center",
-            }}
-          >
-            {selectedItems.find((i) => i._id === record._id)?.quantity || 0}
-          </span>
-          <Button
-            icon={<PlusOutlined />}
-            onClick={() => handleQuantityChange(record, 1)}
-            style={{
-              borderRadius: "50%",
-              width: "30px",
-              height: "30px",
-              padding: 0,
-            }}
-          />
-        </Space>
-      ),
-      align: "center",
-    },
-    {
-      title: "Image",
-      dataIndex: "image",
-      key: "image",
-      render: (text, record) => (
-        <img
-          src={`${process.env.REACT_APP_BACKEND_API_URL}${record?.imageUrl[0]}`}
-          alt={record.name}
-          style={{ width: 50, height: 50, cursor: "pointer" }}
-          onClick={() => handleItemClick(record)}
-        />
-      ),
-    },
-  ];
+  const handleCategoryClick = (categoryItems) => {
+    setSelectedCategoryItems(categoryItems);
+    setIsCategoryModalVisible(true);
+  };
 
   const calculateTotal = () => {
     return selectedItems.reduce(
@@ -213,16 +152,18 @@ const UserOrderPage = () => {
     ));
   };
 
-  // Veg/Non-Veg indicator (green square with green dot for veg, red for non-veg)
+  // Veg/Non-Veg indicator (green square border with green dot for veg, red for non-veg)
   const renderVegIndicator = (isVeg) => (
     <div
       style={{
         display: "inline-block",
-        width: "20px",
-        height: "20px",
-        borderRadius: "3px",
-        backgroundColor: isVeg ? "green" : "red",
+        width: "25px", // Adjusted width to ensure visibility of padding
+        height: "25px", // Adjusted height to ensure visibility of padding
+        borderRadius: "5px", // Slightly rounded corners for better appearance
+        border: `2px solid ${isVeg ? "green" : "red"}`, // Border color
         position: "relative",
+        padding: "5px", // Padding to create space between circle and border
+        marginRight: "5px",
       }}
     >
       <div
@@ -243,20 +184,19 @@ const UserOrderPage = () => {
   return (
     <div>
       <Tabs defaultActiveKey="1">
-        <TabPane tab="One Time Order" key="1">
-          <Collapse defaultActiveKey={Object.keys(groupedItems)}>
-            {Object.keys(groupedItems)?.map((category) => (
-              <Panel header={category} key={category}>
-                <Table
-                  dataSource={groupedItems[category]}
-                  columns={columns}
-                  rowKey="_id"
-                  pagination={false}
-                  size="middle"
-                />
-              </Panel>
+        <items tab="One Time Order" key="1">
+          <div className="category-cards-container">
+            {Object.keys(groupedItems).map((category) => (
+              <div
+                key={category}
+                className="category-card"
+                onClick={() => handleCategoryClick(groupedItems[category])}
+              >
+                <h3>{category}</h3>
+                <Button type="primary">View Items</Button>
+              </div>
             ))}
-          </Collapse>
+          </div>
           {selectedItems.length > 0 && (
             <div style={{ marginTop: "16px", marginLeft: "25px" }}>
               <h3>Order Summary</h3>
@@ -280,57 +220,80 @@ const UserOrderPage = () => {
                 type="primary"
                 onClick={handlePayment}
                 style={{ margin: "25px 0 0 25px" }}
-                disabled={selectedItems.length === 0 || !isPhoneValid}
               >
-                Proceed to Pay
+                Proceed to Payment
               </Button>
             </div>
           )}
-        </TabPane>
-        <TabPane tab="Subscriptions" key="2">
-          {/* Subscription order content */}
-        </TabPane>
+        </items>
+        <items tab="Subscriptions" key="2">
+          {/* Placeholder for Subscriptions tab content */}
+          <div style={{ marginTop: "16px", marginLeft: "25px" }}>
+            <h3>Subscription Options</h3>
+            {/* Add subscription-related content here */}
+          </div>
+        </items>
       </Tabs>
 
       <Modal
-        open={!!selectedImage}
-        onCancel={() => setSelectedImage(null)}
+        title="Category Items"
+        open={isCategoryModalVisible}
+        onCancel={() => setIsCategoryModalVisible(false)}
         footer={null}
         width={800}
       >
-        {selectedImage && (
-          <div className="modal-container">
-            <div className="modal-left">
-              <Carousel autoplay>
-                {selectedImage?.imageUrl?.map((img, index) => (
+        <div className="modal-container">
+          <div className="modal-left">
+            <Carousel
+              autoplay
+              arrows
+              prevArrow={<CaretLeftOutlined style={{ color: "#000" }} />}
+              nextArrow={<CaretRightOutlined style={{ color: "#000" }} />}
+            >
+              {selectedCategoryItems.map((item) => (
+                <div key={item._id} style={{ padding: "10px" }}>
                   <img
-                    key={index}
-                    src={`${process.env.REACT_APP_BACKEND_API_URL}${img}`}
-                    alt={selectedImage.itemName}
-                    style={{ maxWidth: "100%", height: "400px" }}
+                    key={item._id}
+                    src={`${process.env.REACT_APP_BACKEND_API_URL}${item.imageUrl[0]}`}
+                    alt={item.itemName}
+                    style={{ width: "100%", height: "auto" }}
                   />
-                ))}
-              </Carousel>
-            </div>
-            <div className="modal-right">
-              <h2>{selectedImage.itemName}</h2>
-              <h3>Price: {selectedImage.price}</h3>
-              <p>{selectedImage.description}</p>
-              {renderVegIndicator(selectedImage.isVeg)}
-              <Button
-                type="primary"
-                style={{
-                  position: "absolute",
-                  right: "30px",
-                  bottom: "30px",
-                }}
-                onClick={() => handleQuantityChange(selectedImage, 1)}
-              >
-                Add
-              </Button>
-            </div>
+                  <h2>{item.category}</h2>
+                  <h3>
+                    {" "}
+                    {renderVegIndicator(item.isVeg)}
+                    {item.itemName}
+                  </h3>
+                  <p>Price: {item.price}</p>
+                  <Space>
+                    <Button
+                      icon={<MinusOutlined />}
+                      onClick={() => handleQuantityChange(item, -1)}
+                      disabled={
+                        selectedItems.find((i) => i._id === item._id)
+                          ?.quantity <= 0
+                      }
+                    />
+                    <span
+                      style={{
+                        display: "inline-block",
+                        width: "40px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {selectedItems.find((i) => i._id === item._id)
+                        ?.quantity || 0}
+                    </span>
+                    <Button
+                      icon={<PlusOutlined />}
+                      onClick={() => handleQuantityChange(item, 1)}
+                    />
+                  </Space>
+                </div>
+              ))}
+            </Carousel>
           </div>
-        )}
+        </div>
       </Modal>
     </div>
   );
