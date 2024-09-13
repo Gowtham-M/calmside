@@ -108,14 +108,17 @@ const DigitalLedgerPage = () => {
       <h3>Digital Ledger</h3>
       <Form
         onFinish={handleFilterSubmit}
-        layout="vertical"
+        layout="inline"
         style={{ marginBottom: 20 }}
       >
         <Form.Item name="dateRange" label="Date Range">
           <RangePicker />
         </Form.Item>
         <Form.Item name="phoneNumber" label="Phone Number">
-          <Input placeholder="Filter by phone number" />
+          <Input
+            placeholder="Filter by phone number"
+            style={{ width: "20vw" }}
+          />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={loading}>
@@ -124,7 +127,13 @@ const DigitalLedgerPage = () => {
         </Form.Item>
       </Form>
 
-      <div style={{ marginBottom: 20 }}>
+      <div
+        style={{
+          marginBottom: 20,
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
+      >
         <Button
           onClick={() => handleLedgerDownload("pdf")}
           type="primary"

@@ -78,7 +78,6 @@ exports.downloadLedger = async (req, res) => {
 exports.getLedger = async (req, res) => {
   try {
     const { companyId, phoneNumber, startDate, endDate } = req.query;
-
     const query = { companyId };
     if (phoneNumber) query.userPhoneNumber = phoneNumber;
     if (startDate && endDate)
