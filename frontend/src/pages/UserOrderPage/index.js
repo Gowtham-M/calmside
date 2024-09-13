@@ -8,6 +8,7 @@ import {
   Typography,
   Input,
   message,
+  Modal,
 } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -21,6 +22,7 @@ const { Text } = Typography;
 const UserOrderPage = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [phoneNumber, setPhone] = useState("");
   const [isPhoneValid, setIsPhoneValid] = useState(false);
   const { company } = useParams();
@@ -32,6 +34,10 @@ const UserOrderPage = () => {
         setMenuItems(response.data);
       });
   }, [company]);
+
+  const handleItemClick = (item) => {
+    setSelectedImage(item);
+  };
 
   const handleQuantityChange = (item, delta) => {
     const updatedItems = [...selectedItems];
@@ -64,19 +70,19 @@ const UserOrderPage = () => {
       message.error("Please enter a valid phone number.");
       return;
     }
-  
     axios
-      .post(`${process.env.REACT_APP_BACKEND_API_URL}/api/payment/create-order`, {
-        items: selectedItems,
-        company,
-        amount: calculateTotal(),
-        phoneNumber,
-      })
+      .post(
+        `${process.env.REACT_APP_BACKEND_API_URL}/api/payment/create-order`,
+        {
+          items: selectedItems,
+          company,
+          amount: calculateTotal(),
+          phoneNumber,
+        }
+      )
       .then((response) => {
         if (response.data.success) {
-          console.log(response.data)
           const { order, key } = response.data;
-  
           const options = {
             key: key, // Your Razorpay Key
             amount: order.amount, // Amount in paise
@@ -98,7 +104,6 @@ const UserOrderPage = () => {
               color: "#F37254",
             },
           };
-  
           const paymentObject = new window.Razorpay(options);
           paymentObject.open();
         } else {
@@ -110,7 +115,6 @@ const UserOrderPage = () => {
         message.error("An error occurred while processing the payment.");
       });
   };
-  
 
   // Group items by category
   const groupedItems = menuItems.reduce((acc, item) => {
@@ -130,7 +134,7 @@ const UserOrderPage = () => {
       align: "left",
       render: (text, record, index) => index + 1,
     },
-    { title: "Item", dataIndex: "itemName", align:"left" },
+    { title: "Item", dataIndex: "itemName", align: "left" },
     { title: "Price", dataIndex: "price", align: "right" },
     {
       title: "Quantity",
@@ -171,6 +175,19 @@ const UserOrderPage = () => {
         </Space>
       ),
       align: "center",
+    },
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      render: (text, record) => (
+        <img
+          src={text}
+          alt={record.name}
+          style={{ width: 50, height: 50, cursor: "pointer" }}
+          onClick={() => handleItemClick(record)}
+        />
+      ),
     },
   ];
 
@@ -237,6 +254,25 @@ const UserOrderPage = () => {
                 Place Order
               </Button>
             </div>
+          )}
+          {selectedImage && (
+            <Modal
+              open={true}
+              footer={null}
+              onCancel={() => setSelectedImage(null)}
+              width={600}
+            >
+              <div style={{ textAlign: "center" }}>
+                <img
+                  src={selectedImage.image}
+                  alt={selectedImage.name}
+                  style={{ width: "100%", height: "auto" }}
+                />
+                <h2>{selectedImage.name}</h2>
+                <p>{selectedImage.description}</p>
+                <p>Price: {selectedImage.price}</p>
+              </div>
+            </Modal>
           )}
         </TabPane>
         <TabPane tab="Subscriptions" key="2" style={{ textAlign: "center" }}>
