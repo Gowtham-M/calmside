@@ -9,6 +9,7 @@ import {
   Input,
   message,
   Modal,
+  Carousel,
 } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -209,6 +210,33 @@ const UserOrderPage = () => {
     ));
   };
 
+  // Veg/Non-Veg indicator (green square with green dot for veg, red for non-veg)
+  const renderVegIndicator = (isVeg) => (
+    <div
+      style={{
+        display: "inline-block",
+        width: "20px",
+        height: "20px",
+        borderRadius: "3px",
+        backgroundColor: isVeg ? "green" : "red",
+        position: "relative",
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: isVeg ? "green" : "red",
+          width: "10px",
+          height: "10px",
+          borderRadius: "50%",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+        }}
+      />
+    </div>
+  );
+
   return (
     <div>
       <Tabs defaultActiveKey="1">
@@ -251,36 +279,56 @@ const UserOrderPage = () => {
                 style={{ margin: "25px 0 0 25px" }}
                 disabled={selectedItems.length === 0 || !isPhoneValid}
               >
-                Place Order
+                Proceed to Pay
               </Button>
             </div>
           )}
-          {selectedImage && (
-            <Modal
-              open={true}
-              footer={null}
-              onCancel={() => setSelectedImage(null)}
-              width={600}
-            >
-              <div style={{ textAlign: "center" }}>
-                <img
-                  src={selectedImage.image}
-                  alt={selectedImage.name}
-                  style={{ width: "100%", height: "auto" }}
-                />
-                <h2>{selectedImage.name}</h2>
-                <p>{selectedImage.description}</p>
-                <p>Price: {selectedImage.price}</p>
-              </div>
-            </Modal>
-          )}
         </TabPane>
-        <TabPane tab="Subscriptions" key="2" style={{ textAlign: "center" }}>
-          <p>Subscription options here</p>
-          <h2 style={{ color: "green" }}>Thank you for visiting our page!</h2>
-          <h3>We are setting things up here!</h3>
+        <TabPane tab="Subscriptions" key="2">
+          {/* Subscription order content */}
         </TabPane>
       </Tabs>
+
+      <Modal
+        open={!!selectedImage}
+        onCancel={() => setSelectedImage(null)}
+        footer={null}
+        width={800}
+      >
+        {selectedImage && (
+          <div className="modal-container">
+            <div className="modal-left">
+              <Carousel autoplay>
+                {selectedImage.images.map((img, index) => (
+                  <img
+                    key={index}
+                    src={img}
+                    alt={selectedImage.itemName}
+                    style={{ maxWidth: "100%", height: "400px" }}
+                  />
+                ))}
+              </Carousel>
+            </div>
+            <div className="modal-right">
+              <h2>{selectedImage.itemName}</h2>
+              <h3>Price: {selectedImage.price}</h3>
+              <p>{selectedImage.description}</p>
+              {renderVegIndicator(selectedImage.isVeg)}
+              <Button
+                type="primary"
+                style={{
+                  position: "absolute",
+                  right: "30px",
+                  bottom: "30px",
+                }}
+                onClick={() => handleQuantityChange(selectedImage, 1)}
+              >
+                Add
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
