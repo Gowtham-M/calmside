@@ -153,14 +153,14 @@ const UserOrderPage = () => {
   };
 
   // Veg/Non-Veg indicator (green square border with green dot for veg, red for non-veg)
-  const renderVegIndicator = (isVeg) => (
+  const renderVegIndicator = (type) => (
     <div
       style={{
         display: "inline-block",
         width: "25px", // Adjusted width to ensure visibility of padding
         height: "25px", // Adjusted height to ensure visibility of padding
         borderRadius: "5px", // Slightly rounded corners for better appearance
-        border: `2px solid ${isVeg ? "green" : "red"}`, // Border color
+        border: `2px solid ${type === "veg" ? "green" : "red"}`, // Border color
         position: "relative",
         padding: "5px", // Padding to create space between circle and border
         marginRight: "5px",
@@ -168,7 +168,7 @@ const UserOrderPage = () => {
     >
       <div
         style={{
-          backgroundColor: isVeg ? "green" : "red",
+          backgroundColor: type === "veg" ? "green" : "red",
           width: "10px",
           height: "10px",
           borderRadius: "50%",
@@ -261,7 +261,7 @@ const UserOrderPage = () => {
                   <h2>{item.category}</h2>
                   <h3>
                     {" "}
-                    {renderVegIndicator(item.isVeg)}
+                    {renderVegIndicator(item.type)}
                     {item.itemName}
                   </h3>
                   <p>Price: {item.price}</p>

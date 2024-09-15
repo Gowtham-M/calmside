@@ -6,6 +6,7 @@ const MenuItemSchema = new mongoose.Schema(
     category: { type: String, default: "others" },
     itemName: { type: String, required: true },
     price: { type: Number, required: true },
+    type: { type: String, required: true },
     imageUrl: { type: Array },
     isActive: { type: Boolean, default: true },
   },

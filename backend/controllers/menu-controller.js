@@ -56,7 +56,7 @@ exports.uploadImagesHandler = (req, res) => {
 
 // Controller to add a menu item
 exports.addMenuItem = async (req, res) => {
-  const { itemName, category, price, company } = req.body;
+  const { itemName, category, price, company, type } = req.body;
   const imageUrl = req.body.imageUrl || []; // Image URLs from frontend
 
   try {
@@ -64,6 +64,7 @@ exports.addMenuItem = async (req, res) => {
       itemName,
       category,
       price,
+      type,
       company,
       imageUrl,
     });

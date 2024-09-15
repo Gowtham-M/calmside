@@ -5,6 +5,7 @@ import {
   Modal,
   Form,
   Input,
+  Select,
   Space,
   message,
   Upload,
@@ -46,7 +47,8 @@ const EditMenu = () => {
   // Handle adding a new menu item
   const handleAddMenu = () => {
     setEditingMenu(null); // Reset editing menu to null for a new entry
-    setImageUrl("");
+    setImageUrl(""); // Clear image URL
+    form.resetFields(); // Reset form fields to clear any previous values
     setIsModalVisible(true); // Show modal
   };
 
@@ -166,6 +168,13 @@ const EditMenu = () => {
       align: "left",
     },
     {
+      title: "Type", //  column for Veg/Non-Veg
+      dataIndex: "type",
+      key: "type",
+      align: "left",
+      render: (text) => (text === "veg" ? "Veg" : "Non-Veg"), // Display the type text
+    },
+    {
       title: "Image",
       key: "image",
       render: (text, record) =>
@@ -257,6 +266,16 @@ const EditMenu = () => {
             rules={[{ required: true, message: "Please enter the price" }]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            name="type"
+            label="Type" // Dropdown for Veg/Non-Veg
+            rules={[{ required: true, message: "Please select the type" }]}
+          >
+            <Select placeholder="Select Type">
+              <Select.Option value="veg">Veg</Select.Option>
+              <Select.Option value="non-veg">Non-Veg</Select.Option>
+            </Select>
           </Form.Item>
 
           <Form.Item name="images" label="Images">
