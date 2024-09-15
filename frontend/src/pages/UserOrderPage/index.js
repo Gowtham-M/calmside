@@ -114,17 +114,29 @@ const UserOrderPage = () => {
             theme: {
               color: "#F37254",
             },
+            modal: {
+              ondismiss: function () {
+                console.log("Payment modal closed by the user.");
+                // Handle payment failure or user cancellation
+                axios
+                  .post(
+                    `${process.env.REACT_APP_BACKEND_API_URL}/api/payment/failed`,
+                    {
+                      razorpay_order_id: order.id,
+                    }
+                  )
+                  .then(() => {
+                    message.error("Payment failed or canceled.");
+                  })
+                  .catch((error) => {
+                    console.error("Failed to update payment status:", error);
+                  });
+              },
+            },
           };
           const paymentObject = new window.Razorpay(options);
           paymentObject.open();
         } else {
-          axios.post(
-            `${process.env.REACT_APP_BACKEND_API_URL}/api/payment/failed`,
-            {
-              razorpay_order_id: response.razorpay_order_id,
-            }
-          );
-          console.log("payment failed");
           message.error("Failed to create order.");
         }
       })
