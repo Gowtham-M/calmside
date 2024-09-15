@@ -1,15 +1,18 @@
 // routes/paymentRoutes.js
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const paymentController = require('../controllers/payment-controller'); // Ensure the correct path
+const paymentController = require("../controllers/payment-controller"); // Ensure the correct path
 
 // Route to render the product page
-router.get('/product', paymentController.getProductPage);
+router.get("/product", paymentController.getProductPage);
 
 // Route to create an order
-router.post('/create-order', paymentController.createOrder);
+router.post("/create-order", paymentController.createOrder);
 
 // Route to handle payment success
-router.post('/success', paymentController.paymentSuccess);
+router.post("/success", paymentController.paymentSuccess);
+
+// Route to handle payment failure
+router.post("/failed", paymentController.paymentFailed);
 
 module.exports = router;

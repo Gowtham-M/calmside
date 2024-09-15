@@ -34,7 +34,7 @@ const UserOrderPage = () => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_API_URL}/api/menu/${company}`)
       .then((response) => {
-        setMenuItems(response.data);
+        setMenuItems(response.data.items);
       });
   }, [company]);
 
@@ -90,13 +90,21 @@ const UserOrderPage = () => {
             key: key, // Your Razorpay Key
             amount: order.amount, // Amount in paise
             currency: order.currency,
-            name: "Your Company Name",
+            name: menuItems?.companyName || "Company Name",
             description: "Test Transaction",
             order_id: order.id,
             handler: function (response) {
               // Handle success here
               console.log("Payment Success:", response);
-              // You may want to send the payment details to your server
+              //  send the payment details to your server
+              axios.post(
+                `${process.env.REACT_APP_BACKEND_API_URL}/api/payment/success`,
+                {
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                }
+              );
             },
             prefill: {
               name: "", // User's name
@@ -110,6 +118,13 @@ const UserOrderPage = () => {
           const paymentObject = new window.Razorpay(options);
           paymentObject.open();
         } else {
+          axios.post(
+            `${process.env.REACT_APP_BACKEND_API_URL}/api/payment/failed`,
+            {
+              razorpay_order_id: response.razorpay_order_id,
+            }
+          );
+          console.log("payment failed");
           message.error("Failed to create order.");
         }
       })

@@ -1,14 +1,14 @@
 const Ledger = require("../models/ledger-model");
-
 const ExcelJS = require("exceljs");
 const PDFDocument = require("pdfkit");
+const MenuItems = require("../models/menuItem-model");
 
 exports.downloadLedger = async (req, res) => {
   try {
     const { companyId, phoneNumber, startDate, endDate, format } = req.query;
 
     // Fetch ledger based on filters
-    const query = { companyId };
+    const query = { company: companyId };
     if (phoneNumber) query.userPhoneNumber = phoneNumber;
     if (startDate && endDate)
       query.orderDate = { $gte: new Date(startDate), $lte: new Date(endDate) };
@@ -22,7 +22,7 @@ exports.downloadLedger = async (req, res) => {
 
       // Add headers
       sheet.columns = [
-        { header: "Order ID", key: "orderId", width: 15 },
+        { header: "Order ID", key: "orderID", width: 15 },
         { header: "Customer Phone", key: "userPhoneNumber", width: 20 },
         { header: "Order Date", key: "orderDate", width: 20 },
         { header: "Total Amount", key: "totalAmount", width: 15 },
@@ -31,7 +31,7 @@ exports.downloadLedger = async (req, res) => {
       // Add rows
       ledger.forEach((entry) => {
         sheet.addRow({
-          orderId: entry.orderId,
+          orderID: entry.orderID, // Ensure consistency with your schema
           userPhoneNumber: entry.userPhoneNumber,
           orderDate: entry.orderDate.toDateString(),
           totalAmount: entry.totalAmount,
@@ -61,7 +61,7 @@ exports.downloadLedger = async (req, res) => {
       doc.fontSize(12).text("Ledger Report", { align: "center" });
       ledger.forEach((entry) => {
         doc
-          .text(`Order ID: ${entry.orderId}`)
+          .text(`Order ID: ${entry.orderID}`) // Ensure consistency with your schema
           .text(`Customer Phone: ${entry.userPhoneNumber}`)
           .text(`Order Date: ${entry.orderDate.toDateString()}`)
           .text(`Total Amount: ${entry.totalAmount}`)
@@ -78,11 +78,11 @@ exports.downloadLedger = async (req, res) => {
 exports.getLedger = async (req, res) => {
   try {
     const { companyId, phoneNumber, startDate, endDate } = req.query;
-    const query = { companyId };
+    const query = { company: companyId };
     if (phoneNumber) query.userPhoneNumber = phoneNumber;
-    if (startDate && endDate)
+    if (startDate && endDate) {
       query.orderDate = { $gte: new Date(startDate), $lte: new Date(endDate) };
-
+    }
     const ledger = await Ledger.find(query);
     res.json(ledger);
   } catch (error) {

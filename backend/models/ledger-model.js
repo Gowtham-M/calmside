@@ -7,8 +7,24 @@ const ledgerSchema = new mongoose.Schema({
   },
   userPhoneNumber: { type: String },
   orderDate: { type: Date },
-  orderDetails: { type: Array }, // Array of order items, with each item containing relevant details
+  orderID: {
+    type: String,
+    unique: true,
+    required: true,
+  },
+  orderDetails: [
+    {
+      name: String,
+      quantity: Number,
+      price: Number,
+    },
+  ],
   totalAmount: { type: Number },
+  paymentStatus: {
+    type: String,
+    enum: ["Pending", "Completed", "Failed"],
+    default: "Pending",
+  },
 });
 
 module.exports = mongoose.model("Ledger", ledgerSchema);

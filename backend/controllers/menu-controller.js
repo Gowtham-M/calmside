@@ -1,4 +1,5 @@
 const MenuItem = require("../models/menuItem-model");
+const Company = require("../models/company-model");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
@@ -105,7 +106,8 @@ exports.updateMenuItem = async (req, res) => {
 exports.getMenuItems = async (req, res) => {
   try {
     const items = await MenuItem.find({ company: req.params.id });
-    res.json(items);
+    const companyName = await Company.findById(req.params.id);
+    res.json(...items, companyName);
   } catch (err) {
     res.status(500).send(err);
   }
@@ -114,7 +116,12 @@ exports.getMenuItems = async (req, res) => {
 exports.getUserMenuItems = async (req, res) => {
   try {
     const items = await MenuItem.find({ company: req.params.id });
-    res.json(items);
+    const companyName = await Company.findById(req.params.id);
+    const response = {
+      companyName: companyName.companyName, // Extract the company name
+      items: items, // Add the menu items
+    };
+    res.json(response);
   } catch (err) {
     res.status(500).send(err);
   }

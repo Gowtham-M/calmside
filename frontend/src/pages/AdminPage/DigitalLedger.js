@@ -83,8 +83,8 @@ const DigitalLedgerPage = () => {
   const columns = [
     {
       title: "Order ID",
-      dataIndex: "orderId",
-      key: "orderId",
+      dataIndex: "orderID", // Make sure this matches the backend
+      key: "orderID",
     },
     {
       title: "Customer Phone",
@@ -95,11 +95,28 @@ const DigitalLedgerPage = () => {
       title: "Order Date",
       dataIndex: "orderDate",
       key: "orderDate",
+      render: (date) => moment(date).format("YYYY-MM-DD"),
+    },
+    {
+      title: "Order Details",
+      dataIndex: "orderDetails",
+      key: "orderDetails",
+      render: (items) =>
+        items.map((item) => (
+          <div key={item.name}>
+            {item.name} x {item.quantity} = {item.price * item.quantity}
+          </div>
+        )),
     },
     {
       title: "Total Amount",
       dataIndex: "totalAmount",
       key: "totalAmount",
+    },
+    {
+      title: "Payment Status",
+      dataIndex: "paymentStatus",
+      key: "paymentStatus",
     },
   ];
 
