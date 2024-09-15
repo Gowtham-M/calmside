@@ -103,8 +103,8 @@ const DigitalLedgerPage = () => {
       key: "orderDetails",
       render: (items) =>
         items.map((item) => (
-          <div key={item.name}>
-            {item.name} x {item.quantity} = {item.price * item.quantity}
+          <div key={item._id}>
+            {item.itemName} x {item.quantity} = {item.price * item.quantity}
           </div>
         )),
     },

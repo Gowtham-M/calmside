@@ -14,7 +14,7 @@ const ledgerSchema = new mongoose.Schema({
   },
   orderDetails: [
     {
-      name: String,
+      itemName: String,
       quantity: Number,
       price: Number,
     },
