@@ -243,6 +243,7 @@ const UserOrderPage = () => {
                       src={`${process.env.REACT_APP_BACKEND_API_URL}${groupedItems[category][0].imageUrl[0]}`}
                       alt={groupedItems[category].itemName}
                       style={{ width: "100%" }}
+                      className="menu-item-image"
                     />
                     <h3>{category}</h3>
                     <Button type="primary">View Items</Button>
@@ -315,10 +316,11 @@ const UserOrderPage = () => {
                 selectedCategoryItems.map((item) => (
                   <div key={item._id} style={{ padding: "10px" }}>
                     <img
+                      className="menu-item-image"
                       key={item._id}
                       src={`${process.env.REACT_APP_BACKEND_API_URL}${item.imageUrl[0]}`}
                       alt={item.itemName}
-                      style={{ width: "100%", height: "auto" }}
+                      style={{ width: "100%", height: "50vh" }}
                     />
                     <h2>{item.category}</h2>
                     <h3>

@@ -17,4 +17,113 @@
   input {
     margin-bottom: 10px;
   }
-  
+
+  /* UserOrderPage.css */
+
+.menu-page {
+  padding: 20px;
+  background-color: #f5f5f5;
+  font-family: 'Arial', sans-serif;
+}
+
+.top-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo-img {
+  width: 100px;
+  height: auto;
+  margin-right: 20px;
+}
+
+.food-images {
+  display: flex;
+  gap: 10px;
+}
+
+.food-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.menu-items {
+  margin-top: 20px;
+}
+
+.menu-item {
+  background-color: #ffffff;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.menu-item-header {
+  display: flex;
+  align-items: center;
+}
+
+.menu-item-header h3 {
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.menu-item-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-price {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-controls span {
+  margin: 0 10px;
+  font-size: 16px;
+}
+
+.veg-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.veg-indicator.veg {
+  background-color: green;
+}
+
+.veg-indicator.non-veg {
+  background-color: red;
+}
+
+.order-summary {
+  margin-top: 30px;
+}
+
+.phone-input {
+  margin-top: 20px;
+}
+
+.phone-input .ant-input {
+  margin-right: 10px;
+}
+
+.menu-item-image {
+  width: 200px; /* Set the desired width */
+  height: 250px; /* Set the desired height */
+  object-fit: cover; /* Crop the image while maintaining aspect ratio */
+  border-radius: 8px; /* Optional: add border-radius for a more polished look */
+}
+ 
