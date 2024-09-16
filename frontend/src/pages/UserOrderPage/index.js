@@ -25,6 +25,7 @@ const { Text } = Typography;
 
 const UserOrderPage = () => {
   const [menuItems, setMenuItems] = useState([]);
+  const [companyName, setCompanyName] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
   const [phoneNumber, setPhone] = useState("");
   const [isPhoneValid, setIsPhoneValid] = useState(false);
@@ -36,6 +37,7 @@ const UserOrderPage = () => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_API_URL}/api/menu/${company}`)
       .then((response) => {
+        setCompanyName(response.data.companyName);
         setMenuItems(response.data.items);
       });
   }, [company]);
@@ -92,21 +94,35 @@ const UserOrderPage = () => {
             key: key, // Your Razorpay Key
             amount: order.amount, // Amount in paise
             currency: order.currency,
-            name: menuItems?.companyName || "Company Name",
+            name: companyName || "Company Name",
             description: "Test Transaction",
             order_id: order.id,
             handler: function (response) {
               // Handle success here
               console.log("Payment Success:", response);
               //  send the payment details to your server
-              axios.post(
-                `${process.env.REACT_APP_BACKEND_API_URL}/api/payment/success`,
-                {
-                  razorpay_order_id: response.razorpay_order_id,
-                  razorpay_payment_id: response.razorpay_payment_id,
-                  razorpay_signature: response.razorpay_signature,
-                }
-              );
+              axios
+                .post(
+                  `${process.env.REACT_APP_BACKEND_API_URL}/api/payment/success`,
+                  {
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature,
+                  }
+                )
+                .then(() => {
+                  // Reset form after successful payment
+                  setSelectedItems([]);
+                  setPhone("");
+                  setIsPhoneValid(false);
+                  message.success(
+                    "Payment successful. Your order has been placed."
+                  );
+                })
+                .catch((error) => {
+                  console.error("Failed to update payment status:", error);
+                  message.error("Failed to confirm payment.");
+                });
             },
             prefill: {
               name: "", // User's name
