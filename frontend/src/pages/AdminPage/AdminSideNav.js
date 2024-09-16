@@ -21,25 +21,40 @@ const AdminSideNav = () => {
     return "1"; // Default key
   };
 
+  const menuItems = [
+    {
+      key: "1",
+      icon: <AppstoreOutlined />,
+      label: (
+        <Link to={`/admin/${company}/menu-management`}>Menu Management</Link>
+      ),
+    },
+    {
+      key: "2",
+      icon: <BarChartOutlined />,
+      label: (
+        <Link to={`/admin/${company}/sales-analytics`}>Sales Analytics</Link>
+      ),
+    },
+    {
+      key: "3",
+      icon: <FileOutlined />,
+      label: (
+        <Link to={`/admin/${company}/digital-ledger`}>
+          Download Digital Ledger
+        </Link>
+      ),
+    },
+  ];
+
   return (
     <Sider width={200} className="site-layout-background">
       <Menu
         mode="inline"
         selectedKeys={[getSelectedKey()]} // Dynamically set the active tab
         style={{ height: "100%", borderRight: 0 }}
-      >
-        <Menu.Item key="1" icon={<AppstoreOutlined />}>
-          <Link to={`/admin/${company}/menu-management`}>Menu Management</Link>
-        </Menu.Item>
-        <Menu.Item key="2" icon={<BarChartOutlined />}>
-          <Link to={`/admin/${company}/sales-analytics`}>Sales Analytics</Link>
-        </Menu.Item>
-        <Menu.Item key="3" icon={<FileOutlined />}>
-          <Link to={`/admin/${company}/digital-ledger`}>
-            Download Digital Ledger
-          </Link>
-        </Menu.Item>
-      </Menu>
+        items={menuItems} // Use the items property
+      />
     </Sider>
   );
 };

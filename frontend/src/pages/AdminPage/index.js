@@ -15,6 +15,24 @@ const { Header, Content, Sider } = Layout;
 const AdminPage = () => {
   const location = useLocation();
 
+  const menuItems = [
+    {
+      key: "/admin/edit-menu",
+      icon: <UnorderedListOutlined />,
+      label: <Link to="/admin/edit-menu">Edit Menu</Link>,
+    },
+    {
+      key: "/admin/sales-analytics",
+      icon: <BarChartOutlined />,
+      label: <Link to="/admin/sales-analytics">View Sales Analytics</Link>,
+    },
+    {
+      key: "/admin/digital-ledger",
+      icon: <FileExcelOutlined />,
+      label: <Link to="/admin/digital-ledger">Download Digital Ledger</Link>,
+    },
+  ];
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       {/* Sider for Navigation */}
@@ -23,17 +41,8 @@ const AdminPage = () => {
           mode="inline"
           selectedKeys={[location.pathname]}
           style={{ height: "100%", borderRight: 0 }}
-        >
-          <Menu.Item key="/admin/edit-menu" icon={<UnorderedListOutlined />}>
-            <Link to="/admin/edit-menu">Edit Menu</Link>
-          </Menu.Item>
-          <Menu.Item key="/admin/sales-analytics" icon={<BarChartOutlined />}>
-            <Link to="/admin/sales-analytics">View Sales Analytics</Link>
-          </Menu.Item>
-          <Menu.Item key="/admin/digital-ledger" icon={<FileExcelOutlined />}>
-            <Link to="/admin/digital-ledger">Download Digital Ledger</Link>
-          </Menu.Item>
-        </Menu>
+          items={menuItems} // Use the items property
+        />
       </Sider>
 
       {/* Content Area */}
