@@ -3,6 +3,7 @@ import {
   Tabs,
   Button,
   Space,
+  Spin,
   Modal,
   Carousel,
   Typography,
@@ -310,47 +311,54 @@ const UserOrderPage = () => {
               prevArrow={<CaretLeftOutlined style={{ color: "#000" }} />}
               nextArrow={<CaretRightOutlined style={{ color: "#000" }} />}
             >
-              {selectedCategoryItems.map((item) => (
-                <div key={item._id} style={{ padding: "10px" }}>
-                  <img
-                    key={item._id}
-                    src={`${process.env.REACT_APP_BACKEND_API_URL}${item.imageUrl[0]}`}
-                    alt={item.itemName}
-                    style={{ width: "100%", height: "auto" }}
-                  />
-                  <h2>{item.category}</h2>
-                  <h3>
-                    {" "}
-                    {renderVegIndicator(item.type)}
-                    {item.itemName}
-                  </h3>
-                  <p>Price: {item.price}</p>
-                  <Space>
-                    <Button
-                      icon={<MinusOutlined />}
-                      onClick={() => handleQuantityChange(item, -1)}
-                      disabled={
-                        selectedItems.find((i) => i._id === item._id)
-                          ?.quantity <= 0
-                      }
+              {selectedCategoryItems.length > 0 ? (
+                selectedCategoryItems.map((item) => (
+                  <div key={item._id} style={{ padding: "10px" }}>
+                    <img
+                      key={item._id}
+                      src={`${process.env.REACT_APP_BACKEND_API_URL}${item.imageUrl[0]}`}
+                      alt={item.itemName}
+                      style={{ width: "100%", height: "auto" }}
                     />
-                    <span
-                      style={{
-                        display: "inline-block",
-                        width: "40px",
-                        textAlign: "center",
-                      }}
-                    >
-                      {selectedItems.find((i) => i._id === item._id)
-                        ?.quantity || 0}
-                    </span>
-                    <Button
-                      icon={<PlusOutlined />}
-                      onClick={() => handleQuantityChange(item, 1)}
-                    />
-                  </Space>
+                    <h2>{item.category}</h2>
+                    <h3>
+                      {" "}
+                      {renderVegIndicator(item.type)}
+                      {item.itemName}
+                    </h3>
+                    <p>Price: {item.price}</p>
+                    <Space>
+                      <Button
+                        icon={<MinusOutlined />}
+                        onClick={() => handleQuantityChange(item, -1)}
+                        disabled={
+                          selectedItems.find((i) => i._id === item._id)
+                            ?.quantity <= 0
+                        }
+                      />
+                      <span
+                        style={{
+                          display: "inline-block",
+                          width: "40px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {selectedItems.find((i) => i._id === item._id)
+                          ?.quantity || 0}
+                      </span>
+                      <Button
+                        icon={<PlusOutlined />}
+                        onClick={() => handleQuantityChange(item, 1)}
+                      />
+                    </Space>
+                  </div>
+                ))
+              ) : (
+                <div style={{ textAlign: "center", padding: "20px" }}>
+                  <Spin size="large" />
+                  <p>Loading items...</p>
                 </div>
-              ))}
+              )}
             </Carousel>
           </div>
         </div>
