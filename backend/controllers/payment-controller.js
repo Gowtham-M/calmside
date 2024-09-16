@@ -51,7 +51,7 @@ exports.createOrder = async (req, res) => {
     await Ledger.create(ledgerEntry); // Save order details to the ledger
 
     res
-      .status(200)
+      .status(201)
       .json({ success: true, order, key: process.env.RAZORPAY_ID_KEY });
   } catch (error) {
     console.log("error", error);
@@ -74,7 +74,9 @@ exports.paymentSuccess = async (req, res) => {
       { $set: { paymentStatus: "Completed" } }
     );
 
-    res.json({ success: true, message: "Payment verified successfully!" });
+    res
+      .status(201)
+      .json({ success: true, message: "Payment verified successfully!" });
   } else {
     // Update payment status in the ledger for failure
     await Ledger.updateOne(
@@ -97,7 +99,9 @@ exports.paymentFailed = async (req, res) => {
       { $set: { paymentStatus: "Failed" } }
     );
 
-    res.json({ success: true, message: "Payment marked as failed!" });
+    res
+      .status(201)
+      .json({ success: true, message: "Payment marked as failed!" });
   } catch (error) {
     res.status(500).json({ message: "Error marking payment as failed" });
   }

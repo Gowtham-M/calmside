@@ -234,6 +234,7 @@ const EditMenu = () => {
         columns={columns}
         dataSource={menus.filter((menu) => menu.isActive)} // Filter active menus
         rowKey="_id"
+        locale={{ emptyText: "No Active Menus" }}
       />
 
       <h3>Inactive Menus</h3>

@@ -46,7 +46,7 @@ exports.uploadLogo = upload.single("logo");
 exports.getCompanies = async (req, res) => {
   try {
     const companies = await Company.find();
-    res.json(companies);
+    res.status(201).json(companies);
   } catch (err) {
     res
       .status(500)
@@ -96,7 +96,7 @@ exports.updateCompany = async (req, res) => {
       return res.status(404).json({ message: "Company not found" });
     }
 
-    res.json(company);
+    res.status(201).json(company);
   } catch (err) {
     res
       .status(500)

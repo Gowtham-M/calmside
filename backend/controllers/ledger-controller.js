@@ -26,6 +26,7 @@ exports.downloadLedger = async (req, res) => {
         { header: "Customer Phone", key: "userPhoneNumber", width: 20 },
         { header: "Order Date", key: "orderDate", width: 20 },
         { header: "Total Amount", key: "totalAmount", width: 15 },
+        { header: "Payment Status", key: "paymentStatus", width: 20 },
       ];
 
       // Add rows
@@ -48,7 +49,7 @@ exports.downloadLedger = async (req, res) => {
         'attachment; filename="ledger.xlsx"'
       );
 
-      return workbook.xlsx.write(res).then(() => res.status(200).end());
+      return workbook.xlsx.write(res).then(() => res.status(201).end());
     } else if (format === "pdf") {
       // Generate PDF file
       const doc = new PDFDocument();
@@ -84,7 +85,7 @@ exports.getLedger = async (req, res) => {
       query.orderDate = { $gte: new Date(startDate), $lte: new Date(endDate) };
     }
     const ledger = await Ledger.find(query);
-    res.json(ledger);
+    res.status(201).json(ledger);
   } catch (error) {
     res.status(500).json({ message: "Error fetching ledger data" });
   }

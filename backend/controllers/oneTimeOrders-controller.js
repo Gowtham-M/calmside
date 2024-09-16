@@ -23,7 +23,7 @@ class FoodItemController {
   async getAll(req, res) {
     try {
       const foodItems = await FoodItem.find();
-      return res.status(200).json(foodItems);
+      return res.status(201).json(foodItems);
     } catch (error) {
       return res
         .status(500)
@@ -41,7 +41,7 @@ class FoodItemController {
         return res.status(404).json({ message: "Food item not found" });
       }
 
-      return res.status(200).json(foodItem);
+      return res.status(201).json(foodItem);
     } catch (error) {
       return res
         .status(500)
@@ -66,7 +66,7 @@ class FoodItemController {
         return res.status(404).json({ message: "Food item not found" });
       }
 
-      return res.status(200).json(updatedFoodItem);
+      return res.status(201).json(updatedFoodItem);
     } catch (error) {
       return res
         .status(500)
@@ -87,7 +87,7 @@ class FoodItemController {
       }
 
       return res
-        .status(200)
+        .status(201)
         .json({ message: "Food item deleted successfully" });
     } catch (error) {
       return res

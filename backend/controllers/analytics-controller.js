@@ -31,6 +31,8 @@ exports.generateAnalytics = (req, res) => {
     }
 
     // Return the path to the generated image
-    res.json({ imageUrl: `/analytics/${companyId}_sales_analysis.png` });
+    res
+      .status(201)
+      .json({ imageUrl: `/analytics/${companyId}_sales_analysis.png` });
   });
 };

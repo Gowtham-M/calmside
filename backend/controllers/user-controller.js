@@ -93,7 +93,7 @@ exports.login = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
     });
-    res.json({ user });
+    res.status(201).json({ user });
   } catch (err) {
     console.log(`error ${err.message}`);
     res.status(500).json({ message: err.message });
@@ -103,7 +103,7 @@ exports.login = async (req, res) => {
 // Logout controller
 exports.logout = (req, res) => {
   res.clearCookie("token");
-  res.json({ message: "Logout successful" });
+  res.status(201).json({ message: "Logout successful" });
 };
 
 // Middleware to authenticate and authorize based on role
@@ -139,7 +139,7 @@ exports.isCompanyAdmin = (req, res, next) => {
 exports.getAdmins = async (req, res) => {
   try {
     const admins = await User.find({ role: "admin", company: req.params.id });
-    res.json(admins);
+    res.status(201).json(admins);
   } catch (err) {
     res.status(500).send(err);
   }
@@ -150,7 +150,7 @@ exports.updateAdmins = async (req, res) => {
     const admin = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    res.json(admin);
+    res.status(201).json(admin);
   } catch (err) {
     res.status(500).send(err);
   }
