@@ -115,7 +115,10 @@ exports.getMenuItems = async (req, res) => {
 
 exports.getUserMenuItems = async (req, res) => {
   try {
-    const items = await MenuItem.find({ company: req.params.id });
+    const items = await MenuItem.find({
+      company: req.params.id,
+      isActive: true,
+    });
     const companyName = await Company.findById(req.params.id);
     const response = {
       companyName: companyName.companyName, // Extract the company name
