@@ -121,9 +121,9 @@
 }
 
 .menu-item-image {
-  width: 200px; /* Set the desired width */
-  height: 250px; /* Set the desired height */
-  object-fit: cover; /* Crop the image while maintaining aspect ratio */
-  border-radius: 8px; /* Optional: add border-radius for a more polished look */
+  width: 200px; 
+  height: 250px; 
+  object-fit: cover; 
+  border-radius: 8px;
 }
  

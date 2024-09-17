@@ -287,7 +287,8 @@ const UserOrderPage = () => {
               <Button
                 type="primary"
                 onClick={handlePayment}
-                style={{ margin: "25px 0 0 25px" }}
+                style={{ margin: "25px 0 0 0px" }}
+                disabled={!isPhoneValid}
               >
                 Proceed to Payment
               </Button>
@@ -297,8 +298,7 @@ const UserOrderPage = () => {
 
         <Tabs.TabPane tab="Subscriptions" key="2">
           <div style={{ marginTop: "16px", marginLeft: "25px" }}>
-            <h3>Subscription Options</h3>
-            {/* Add subscription-related content here */}
+            <h3>We are working on this Page! Thank you for visiting us!</h3>
           </div>
         </Tabs.TabPane>
       </Tabs>
