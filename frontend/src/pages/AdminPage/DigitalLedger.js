@@ -12,6 +12,7 @@ const DigitalLedgerPage = () => {
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({});
   const { company } = useParams();
+  const [form] = Form.useForm(); // Initialize the form instance
 
   useEffect(() => {
     fetchLedgerData();
@@ -41,6 +42,7 @@ const DigitalLedgerPage = () => {
 
   const handleFilterSubmit = (values) => {
     const [startDate, endDate] = values.dateRange || [];
+    const phoneNumber = values.phoneNumber || "";
 
     const newFilters = {
       startDate: startDate
@@ -49,7 +51,7 @@ const DigitalLedgerPage = () => {
       endDate: endDate
         ? dayjs(endDate).startOf("day").format("YYYY-MM-DD")
         : null,
-      phoneNumber: values.phoneNumber || null,
+      phoneNumber: phoneNumber,
     };
     setFilters(newFilters);
   };
@@ -128,14 +130,23 @@ const DigitalLedgerPage = () => {
 
   // Disable future dates
   const disabledDate = (current) => {
-    // Can not select days after today
     return current && current > dayjs().endOf("day");
+  };
+
+  // Phone number validation rule
+  const phoneNumberValidator = (_, value) => {
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (value && !phoneRegex.test(value)) {
+      return Promise.reject("Invalid phone number.");
+    }
+    return Promise.resolve();
   };
 
   return (
     <div className="ledger-container">
       <h3 className="ledger-heading">Digital Ledger</h3>
       <Form
+        form={form}
         onFinish={handleFilterSubmit}
         layout="inline"
         style={{ marginBottom: 20 }}
@@ -143,10 +154,19 @@ const DigitalLedgerPage = () => {
         <Form.Item name="dateRange" label="Date Range">
           <RangePicker disabledDate={disabledDate} />
         </Form.Item>
-        <Form.Item name="phoneNumber" label="Phone Number">
+        <Form.Item
+          name="phoneNumber"
+          label="Phone Number"
+          rules={[
+            {
+              validator: phoneNumberValidator,
+            },
+          ]}
+        >
           <Input
             placeholder="Filter by phone number"
             style={{ width: "20vw" }}
+            onChange={(e) => form.validateFields(["phoneNumber"])} // Trigger validation on change
           />
         </Form.Item>
         <Form.Item>
