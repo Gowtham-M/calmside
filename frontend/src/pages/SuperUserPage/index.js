@@ -16,6 +16,7 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "./SuperUserPage.css";
 
 const CompanyManagement = () => {
   const [companies, setCompanies] = useState([]);
@@ -146,7 +147,11 @@ const CompanyManagement = () => {
       key: "companyName",
       align: "left",
       render: (text, record) => (
-        <Button type="link" onClick={() => handleViewCompanyDetails(record)}>
+        <Button
+          type="link"
+          style={{ display: "contents" }}
+          onClick={() => handleViewCompanyDetails(record)}
+        >
           {text}
         </Button>
       ),
@@ -215,14 +220,8 @@ const CompanyManagement = () => {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "20px",
-        }}
-      >
+    <div className="company-management-container">
+      <div className="header-container">
         <h2>Company Management</h2>
         <Button type="primary" onClick={handleAddCompany}>
           Add Company

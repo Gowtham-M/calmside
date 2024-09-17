@@ -1,0 +1,53 @@
+/* Mobile-first styles */
+.company-management-container {
+  padding: 20px;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-container h2 {
+  margin-bottom: 20px;
+}
+
+.header-container .ant-btn {
+  width: fit-content;
+}
+
+/* Table title styling */
+.company-management-container h3 {
+  margin-top: 20px;
+}
+
+/* Responsive button width */
+@media (min-width: 576px) {
+  .header-container .ant-btn {
+    width: fit-content;
+  }
+}
+
+@media (min-width: 768px) {
+  .header-container {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .header-container h2 {
+    margin-bottom: 0;
+  }
+
+  .header-container .ant-btn {
+    width: fit-content;
+  }
+}
+
+@media (min-width: 992px) {
+  .header-container .ant-btn {
+    width: fit-content;
+  }
+}
