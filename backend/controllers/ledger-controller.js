@@ -36,6 +36,7 @@ exports.downloadLedger = async (req, res) => {
           userPhoneNumber: entry.userPhoneNumber,
           orderDate: entry.orderDate.toDateString(),
           totalAmount: entry.totalAmount,
+          paymentStatus: entry.paymentStatus,
         });
       });
 
@@ -66,6 +67,7 @@ exports.downloadLedger = async (req, res) => {
           .text(`Customer Phone: ${entry.userPhoneNumber}`)
           .text(`Order Date: ${entry.orderDate.toDateString()}`)
           .text(`Total Amount: ${entry.totalAmount}`)
+          .text(`Payment Status:${entry.paymentStatus}`)
           .moveDown();
       });
 
