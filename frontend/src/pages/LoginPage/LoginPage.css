@@ -1,0 +1,49 @@
+/* Mobile-first default styles */
+.login-container {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    padding-top: 50px;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-align: center;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .ant-form-item {
+    margin-bottom: 16px;
+  }
+  
+  /* Adjust button to fit the width on smaller screens */
+  .ant-btn {
+    width: 100%;
+  }
+  
+  /* Tablet and larger screens */
+  @media (min-width: 768px) {
+    .login-container {
+      max-width: 400px;
+      padding-top: 100px;
+    }
+  
+    h2 {
+      font-size: 1.75rem;
+    }
+  }
+  
+  /* Desktop and larger screens */
+  @media (min-width: 992px) {
+    .login-container {
+      max-width: 500px;
+      padding-top: 150px;
+    }
+  
+    h2 {
+      font-size: 2rem;
+    }
+  }
+  

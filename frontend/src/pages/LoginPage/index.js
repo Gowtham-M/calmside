@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Form, Input, Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "./LoginPage.css"; // Import CSS for responsive styles
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false);
@@ -32,7 +33,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div style={{ width: "300px", margin: "0 auto", paddingTop: "50px" }}>
+    <div className="login-container">
       <h2>Login</h2>
       <Form name="login" onFinish={handleLogin} layout="vertical">
         <Form.Item
@@ -50,7 +51,7 @@ const LoginPage = () => {
           <Input.Password />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
+          <Button type="primary" htmlType="submit" loading={loading} block>
             Log In
           </Button>
         </Form.Item>
