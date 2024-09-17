@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, DatePicker, Form, Input, Table, message } from "antd";
 import axios from "axios";
 import moment from "moment";
+import dayjs from "dayjs";
 import { useParams } from "react-router-dom";
 import "./DigitalLedger.css";
 
@@ -40,10 +41,16 @@ const DigitalLedgerPage = () => {
   };
 
   const handleFilterSubmit = (values) => {
+    // console.log(values);
     const [startDate, endDate] = values.dateRange || [];
+
     const newFilters = {
-      startDate: startDate ? moment(startDate).format("YYYY-MM-DD") : null,
-      endDate: endDate ? moment(endDate).format("YYYY-MM-DD") : null,
+      startDate: startDate
+        ? dayjs(startDate).startOf("day").format("YYYY-MM-DD")
+        : null,
+      endDate: endDate
+        ? dayjs(endDate).startOf("day").format("YYYY-MM-DD")
+        : null,
       phoneNumber: values.phoneNumber || null,
     };
     setFilters(newFilters);
