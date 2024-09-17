@@ -313,6 +313,7 @@ const UserOrderPage = () => {
         onCancel={() => setIsCategoryModalVisible(false)}
         footer={null}
         width={800}
+        centered
       >
         <div className="modal-container">
           <div className="modal-left">
@@ -326,41 +327,48 @@ const UserOrderPage = () => {
                       src={`${process.env.REACT_APP_BACKEND_API_URL}${item.imageUrl[0]}`}
                       alt={item.itemName}
                       style={{
-                        width: "100%",
+                        width: "97%",
                         height: "50vh",
                       }}
                     />
                     <h2>{item.category}</h2>
                     <h3>
-                      {" "}
                       {renderVegIndicator(item.type)}
                       {item.itemName}
                     </h3>
-                    <p>Price: {item.price}</p>
-                    <Space>
-                      <Button
-                        icon={<MinusOutlined />}
-                        onClick={() => handleQuantityChange(item, -1)}
-                        disabled={
-                          selectedItems.find((i) => i._id === item._id)
-                            ?.quantity <= 0
-                        }
-                      />
-                      <span
-                        style={{
-                          display: "inline-block",
-                          width: "40px",
-                          textAlign: "center",
-                        }}
-                      >
-                        {selectedItems.find((i) => i._id === item._id)
-                          ?.quantity || 0}
-                      </span>
-                      <Button
-                        icon={<PlusOutlined />}
-                        onClick={() => handleQuantityChange(item, 1)}
-                      />
-                    </Space>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        margin: "3%",
+                      }}
+                    >
+                      <p>Price: {item.price}</p>
+                      <Space>
+                        <Button
+                          icon={<MinusOutlined />}
+                          onClick={() => handleQuantityChange(item, -1)}
+                          disabled={
+                            selectedItems.find((i) => i._id === item._id)
+                              ?.quantity <= 0
+                          }
+                        />
+                        <span
+                          style={{
+                            display: "inline-block",
+                            width: "40px",
+                            textAlign: "center",
+                          }}
+                        >
+                          {selectedItems.find((i) => i._id === item._id)
+                            ?.quantity || 0}
+                        </span>
+                        <Button
+                          icon={<PlusOutlined />}
+                          onClick={() => handleQuantityChange(item, 1)}
+                        />
+                      </Space>
+                    </div>
                   </div>
                 ))
               ) : (

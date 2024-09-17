@@ -126,4 +126,44 @@
   object-fit: cover; 
   border-radius: 8px;
 }
- 
+ /* Ensure the modal header does not overlap with content */
+.ant-modal-header {
+  position: relative;
+}
+
+/* Style for the close (X) icon */
+.ant-modal-close {
+  background: rgba(0, 0, 0, 0.75); /* Dark background for better contrast */
+  border-radius: 50%; /* Rounded background */
+  padding: 8px; /* Space around the icon */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Shadow for better visibility */
+}
+
+/* Ensure close icon color is white for visibility */
+.ant-modal-close-x {
+  color: rgb(81, 13, 13);
+}
+
+/* Ensure the modal content does not overlap with close icon */
+.ant-modal-body {
+  padding: 20px; /* Add padding for better spacing */
+}
+
+/* Adjust carousel image styling */
+.modal-container .modal-left img {
+  max-width: 100%; /* Ensure images do not overflow */
+  height: auto; /* Maintain aspect ratio */
+}
+
+/* Add a container for modal to ensure proper alignment */
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Ensure content is correctly aligned */
+.ant-modal-footer {
+  display: flex;
+  justify-content: center;
+}
