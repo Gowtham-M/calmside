@@ -12,12 +12,7 @@ import {
   Input,
   message,
 } from "antd";
-import {
-  PlusOutlined,
-  MinusOutlined,
-  CaretLeftOutlined,
-  CaretRightOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import "./UserOrderPage.css";
@@ -203,12 +198,12 @@ const UserOrderPage = () => {
     <div
       style={{
         display: "inline-block",
-        width: "25px", // Adjusted width to ensure visibility of padding
-        height: "25px", // Adjusted height to ensure visibility of padding
+        width: "18px", // Adjusted width to ensure visibility of padding
+        height: "18px", // Adjusted height to ensure visibility of padding
         borderRadius: "5px", // Slightly rounded corners for better appearance
         border: `2px solid ${type === "veg" ? "green" : "red"}`, // Border color
         position: "relative",
-        padding: "5px", // Padding to create space between circle and border
+        padding: "7px", // Padding to create space between circle and border
         marginRight: "5px",
       }}
     >
@@ -245,8 +240,19 @@ const UserOrderPage = () => {
                       style={{ width: "100%" }}
                       className="menu-item-image"
                     />
-                    <h3>{category}</h3>
-                    <Button type="primary">View Items</Button>
+                    <div
+                      style={{
+                        display: "flex",
+                        margin: "5px",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        fontSize: "12px",
+                        width: "100%",
+                      }}
+                    >
+                      <h3 style={{ margin: 0 }}>{category}</h3>{" "}
+                      <Button type="primary">View Items</Button>
+                    </div>
                   </div>
                 </Col>
               ))
@@ -298,7 +304,6 @@ const UserOrderPage = () => {
       </Tabs>
 
       <Modal
-        title="Category Items"
         open={isCategoryModalVisible}
         onCancel={() => setIsCategoryModalVisible(false)}
         footer={null}
@@ -306,12 +311,7 @@ const UserOrderPage = () => {
       >
         <div className="modal-container">
           <div className="modal-left">
-            <Carousel
-              autoplay
-              arrows
-              prevArrow={<CaretLeftOutlined style={{ color: "#000" }} />}
-              nextArrow={<CaretRightOutlined style={{ color: "#000" }} />}
-            >
+            <Carousel autoplay arrows dotPosition="left">
               {selectedCategoryItems.length > 0 ? (
                 selectedCategoryItems.map((item) => (
                   <div key={item._id} style={{ padding: "10px" }}>
@@ -320,7 +320,10 @@ const UserOrderPage = () => {
                       key={item._id}
                       src={`${process.env.REACT_APP_BACKEND_API_URL}${item.imageUrl[0]}`}
                       alt={item.itemName}
-                      style={{ width: "100%", height: "50vh" }}
+                      style={{
+                        width: "100%",
+                        height: "50vh",
+                      }}
                     />
                     <h2>{item.category}</h2>
                     <h3>
