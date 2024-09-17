@@ -215,6 +215,26 @@ const EditMenu = () => {
     },
   ];
 
+  // Validation for item name and category
+  const textValidator = (_, value) => {
+    const textRegex = /^(?!^\d+$)[a-zA-Z0-9\s]+$/; // Prevents only numbers
+    if (value && !textRegex.test(value)) {
+      return Promise.reject(
+        "Input must contain letters or alphanumeric characters."
+      );
+    }
+    return Promise.resolve();
+  };
+
+  // Validation for price
+  const priceValidator = (_, value) => {
+    const priceRegex = /^\d+(\.\d{1,2})?$/; // Allows numbers and optional 2 decimal places
+    if (value && !priceRegex.test(value)) {
+      return Promise.reject("Price must be a valid number.");
+    }
+    return Promise.resolve();
+  };
+
   return (
     <div style={{ padding: "20px" }}>
       <div
@@ -255,19 +275,32 @@ const EditMenu = () => {
           <Form.Item
             name="itemName"
             label="Item Name"
-            rules={[{ required: true, message: "Please enter the item name" }]}
+            rules={[
+              { required: true, message: "Please enter the item name" },
+              { validator: textValidator },
+            ]}
           >
             <Input />
           </Form.Item>
-          <Form.Item name="category" label="Category">
+          <Form.Item
+            name="category"
+            label="Category"
+            rules={[
+              { required: true, message: "Please enter the category" },
+              { validator: textValidator },
+            ]}
+          >
             <Input />
           </Form.Item>
           <Form.Item
             name="price"
             label="Price"
-            rules={[{ required: true, message: "Please enter the price" }]}
+            rules={[
+              { required: true, message: "Please enter the price" },
+              { validator: priceValidator },
+            ]}
           >
-            <Input />
+            <Input type="number" />
           </Form.Item>
           <Form.Item
             name="type"
