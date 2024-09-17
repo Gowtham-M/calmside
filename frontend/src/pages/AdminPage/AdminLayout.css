@@ -1,0 +1,11 @@
+/* Responsive Sider adjustments */
+.admin-sider {
+    background-color: #001529; /* Keeps the Sider theme intact */
+  }
+  
+  @media (max-width: 576px) {
+    .admin-sider {
+      width: 80px; /* Adjust width for smaller screens */
+    }
+  }
+  

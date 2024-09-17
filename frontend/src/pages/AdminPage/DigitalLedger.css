@@ -1,0 +1,51 @@
+.ledger-container {
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ledger-heading{
+  margin: 10px;
+}
+
+/* Digital ledger form styles */
+.digital-ledger-form {
+  display: flex;
+  flex-wrap: wrap; /* Ensure wrapping on small screens */
+  gap: 10px; /* Add spacing between inputs */
+  margin-bottom: 20px;
+}
+
+.digital-ledger-form .ant-form-item {
+  flex: 1;
+  min-width: 150px; /* Ensure inputs don't get too small */
+}
+
+/* Responsive buttons */
+.digital-ledger-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px; /* Ensure buttons don't overlap */
+}
+
+@media (max-width: 768px) {
+  .digital-ledger-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .digital-ledger-actions .ant-btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+/* Ensure table is scrollable on smaller screens */
+.ledger-table {
+  overflow-x: auto; /* Make table scrollable horizontally */
+}
+
+.ledger-table table {
+  min-width: 100%; /* Ensure table does not overflow */
+}

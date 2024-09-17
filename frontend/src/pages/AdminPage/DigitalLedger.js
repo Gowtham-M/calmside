@@ -3,6 +3,7 @@ import { Button, DatePicker, Form, Input, Table, message } from "antd";
 import axios from "axios";
 import moment from "moment";
 import { useParams } from "react-router-dom";
+import "./DigitalLedger.css";
 
 const { RangePicker } = DatePicker;
 
@@ -121,8 +122,8 @@ const DigitalLedgerPage = () => {
   ];
 
   return (
-    <div>
-      <h3>Digital Ledger</h3>
+    <div className="ledger-container">
+      <h3 className="ledger-heading">Digital Ledger</h3>
       <Form
         onFinish={handleFilterSubmit}
         layout="inline"

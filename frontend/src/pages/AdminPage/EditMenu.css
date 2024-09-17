@@ -1,0 +1,36 @@
+/* Make sure the form is responsive */
+.edit-menu-form {
+    padding: 20px;
+  }
+  
+  .edit-menu-form .ant-input,
+  .edit-menu-form .ant-select {
+    width: 100%; /* Full width for inputs and selects on small screens */
+  }
+  
+  @media (min-width: 768px) {
+    .edit-menu-form .ant-input,
+    .edit-menu-form .ant-select {
+      width: auto; /* Auto width for larger screens */
+    }
+  }
+  
+  .edit-menu-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  @media (max-width: 576px) {
+    .edit-menu-actions {
+      flex-direction: column; /* Stack buttons on mobile */
+      align-items: stretch;
+    }
+  
+    .edit-menu-actions .ant-btn {
+      margin-bottom: 10px;
+      width: 100%;
+    }
+  }
+  .ant-btn {
+    width: fit-content;
+  }  

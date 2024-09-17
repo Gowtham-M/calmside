@@ -17,6 +17,7 @@ import {
 } from "@ant-design/icons";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import "./EditMenu.css";
 
 const EditMenu = () => {
   const [menus, setMenus] = useState([]); // State to hold menu items
