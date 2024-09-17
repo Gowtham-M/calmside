@@ -3,6 +3,7 @@ import { Table, Button, Modal, Form, Input, Space, message } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import "./AdminManagement.css";
 
 const AdminManagement = () => {
   const [admins, setAdmins] = useState([]);
@@ -58,10 +59,10 @@ const AdminManagement = () => {
         `${process.env.REACT_APP_BACKEND_API_URL}/api/companies/admins/${adminId}`,
         { isActive: true }
       );
-      message.success("admin activated");
+      message.success("Admin activated");
       fetchAdmins();
     } catch (error) {
-      message.error("Failed to activate admin");
+      message.error("Failed to activate Admin");
     }
   };
 
@@ -120,6 +121,7 @@ const AdminManagement = () => {
     {
       title: "Actions",
       key: "actions",
+      align: "left",
       render: (_, record) => (
         <Space size="middle">
           <Button
@@ -146,14 +148,8 @@ const AdminManagement = () => {
   ];
 
   return (
-    <div style={{ padding: "20px" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "20px",
-        }}
-      >
+    <div className="admin-management-container">
+      <div className="header-container">
         <h2>Admin Management</h2>
         <Button type="primary" onClick={handleAddAdmin}>
           Add Admin
@@ -167,7 +163,7 @@ const AdminManagement = () => {
         rowKey="_id"
       />
 
-      <h3>Inactive admins</h3>
+      <h3>Inactive Admins</h3>
       <Table
         columns={columns}
         dataSource={admins.filter((admin) => !admin.isActive)}
@@ -209,7 +205,7 @@ const AdminManagement = () => {
             label="Password"
             rules={[{ required: true, message: "Please enter the Password" }]}
           >
-            <Input />
+            <Input.Password />
           </Form.Item>
           <Form.Item>
             <Space style={{ width: "100%", justifyContent: "end" }}>

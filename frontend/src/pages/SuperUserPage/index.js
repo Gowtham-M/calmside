@@ -190,6 +190,7 @@ const CompanyManagement = () => {
     {
       title: "Actions",
       key: "actions",
+      align: "left",
       render: (_, record) => (
         <Space size="middle">
           <Button
