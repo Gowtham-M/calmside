@@ -7,6 +7,7 @@ import {
   Modal,
   Carousel,
   Typography,
+  Tooltip,
   Row,
   Col,
   Input,
@@ -230,30 +231,34 @@ const UserOrderPage = () => {
             {Object.keys(groupedItems).length > 0 ? (
               Object.keys(groupedItems).map((category) => (
                 <Col key={category} xs={24} sm={12} md={8} lg={6}>
-                  <div
-                    className="category-card"
-                    onClick={() => handleCategoryClick(groupedItems[category])}
-                  >
-                    <img
-                      src={`${process.env.REACT_APP_BACKEND_API_URL}${groupedItems[category][0].imageUrl[0]}`}
-                      alt={groupedItems[category].itemName}
-                      style={{ width: "100%" }}
-                      className="menu-item-image"
-                    />
+                  <Tooltip title={`Click here to view items in ${category}`}>
                     <div
-                      style={{
-                        display: "flex",
-                        margin: "5px",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        fontSize: "12px",
-                        width: "100%",
-                      }}
+                      className="category-card"
+                      onClick={() =>
+                        handleCategoryClick(groupedItems[category])
+                      }
                     >
-                      <h3 style={{ margin: 0 }}>{category}</h3>{" "}
-                      <Button type="primary">View Items</Button>
+                      <img
+                        src={`${process.env.REACT_APP_BACKEND_API_URL}${groupedItems[category][0].imageUrl[0]}`}
+                        alt={groupedItems[category].itemName}
+                        style={{ width: "100%" }}
+                        className="menu-item-image"
+                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          margin: "5px",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          fontSize: "12px",
+                          width: "100%",
+                        }}
+                      >
+                        <h3 style={{ margin: 0 }}>{category}</h3>{" "}
+                        <Button type="primary">View Items</Button>
+                      </div>
                     </div>
-                  </div>
+                  </Tooltip>
                 </Col>
               ))
             ) : (
