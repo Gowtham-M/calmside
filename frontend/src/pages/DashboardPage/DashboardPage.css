@@ -17,33 +17,50 @@ h2 {
 .company-card {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
+  transition: all 0.3s ease;
+  height: 100%; /* Ensure all cards take equal height */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .company-card:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
+.ant-card-cover {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
 .ant-card-cover img {
-  height: 100px;
+  height: 150px; /* Set a fixed height */
   object-fit: cover;
   border-radius: 10px 10px 0 0;
 }
 
+.ant-card-meta {
+  flex-grow: 1; /* Allow the text section to grow to fill available space */
+}
+
 .ant-card-meta-title {
   font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ant-card-meta-description {
   color: #888;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
 }
 
 /* Mobile-first styles */
-/* Default styles for mobile (xs) */
-
-.dashboard-container {
-  padding: 10px;
-}
-
 .company-card img {
   width: 100%;
   height: auto;
