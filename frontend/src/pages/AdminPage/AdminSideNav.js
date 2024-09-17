@@ -40,9 +40,7 @@ const AdminSideNav = () => {
       key: "3",
       icon: <FileOutlined />,
       label: (
-        <Link to={`/admin/${company}/digital-ledger`}>
-          Download Digital Ledger
-        </Link>
+        <Link to={`/admin/${company}/digital-ledger`}>Digital Ledger</Link>
       ),
     },
   ];

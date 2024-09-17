@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, DatePicker, Form, Input, Table, message } from "antd";
 import axios from "axios";
-import moment from "moment";
 import dayjs from "dayjs";
 import { useParams } from "react-router-dom";
 import "./DigitalLedger.css";
@@ -41,7 +40,6 @@ const DigitalLedgerPage = () => {
   };
 
   const handleFilterSubmit = (values) => {
-    // console.log(values);
     const [startDate, endDate] = values.dateRange || [];
 
     const newFilters = {
@@ -91,7 +89,7 @@ const DigitalLedgerPage = () => {
   const columns = [
     {
       title: "Order ID",
-      dataIndex: "orderID", // Make sure this matches the backend
+      dataIndex: "orderID",
       key: "orderID",
     },
     {
@@ -103,7 +101,7 @@ const DigitalLedgerPage = () => {
       title: "Order Date",
       dataIndex: "orderDate",
       key: "orderDate",
-      render: (date) => moment(date).format("YYYY-MM-DD"),
+      render: (date) => dayjs(date).format("YYYY-MM-DD"),
     },
     {
       title: "Order Details",
@@ -128,6 +126,12 @@ const DigitalLedgerPage = () => {
     },
   ];
 
+  // Disable future dates
+  const disabledDate = (current) => {
+    // Can not select days after today
+    return current && current > dayjs().endOf("day");
+  };
+
   return (
     <div className="ledger-container">
       <h3 className="ledger-heading">Digital Ledger</h3>
@@ -137,7 +141,7 @@ const DigitalLedgerPage = () => {
         style={{ marginBottom: 20 }}
       >
         <Form.Item name="dateRange" label="Date Range">
-          <RangePicker />
+          <RangePicker disabledDate={disabledDate} />
         </Form.Item>
         <Form.Item name="phoneNumber" label="Phone Number">
           <Input
